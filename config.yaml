@@ -1,8 +1,10 @@
 units:
   kx: cx
   ky: cy
-  px: kx + 2
-  py: ky + 2
+  pd: 2
+
+  px: kx + pd
+  py: ky + pd
 points:
   zones:
     matrix:
@@ -45,3 +47,73 @@ points:
             shift: [0, 0.25 kx]
       rows:
         thumb:
+outlines:
+  raw:
+    - what: rectangle
+      where: true
+      asym: source
+      size: [kx + 2, ky + 2]
+      corner: pd
+  keys:
+    - what: rectangle
+      where: true
+      size: [kx - 0.5, ky - 0.5]
+      bound: false
+  board:
+    - what: polygon
+      operation: stack
+      fillet: 1
+      points:
+        - ref: matrix_pinky_top
+          shift: [-0.5 px, 0.5 py]
+        - ref: matrix_pinky_top
+          shift: [0.5 px - pd, 0.5 py]
+
+        - ref: matrix_ring_top
+          shift: [-0.5 px, 0.5 py]
+        - ref: matrix_ring_top
+          shift: [0.5 px - pd, 0.5 py]
+
+        - ref: matrix_middle_top
+          shift: [-0.5 px, 0.5 py]
+        - ref: matrix_middle_top
+          shift: [0.5 px, 0.5 py]
+
+        - ref: matrix_index_top
+          shift: [-0.5 px + pd, 0.5 py]
+        - ref: matrix_index_top
+          shift: [0.5 px, 0.5 py]
+
+        - ref: matrix_inner_top
+          shift: [-0.5 px + pd, 0.5 py]
+        - ref: matrix_inner_top
+          shift: [0.5 px, 0.5 py]
+
+        - ref: matrix_inner_bottom
+          shift: [0.5 px, -0.5 py + 3.5]
+
+        - ref: thumbfan_far_thumb
+          shift: [0.75 px, 0.5 py]
+        - ref: thumbfan_far_thumb
+          shift: [0.75 px, -0.5 py]
+        - ref: thumbfan_far_thumb
+          shift: [-0.75 px, -0.5 py]
+
+        - ref: thumbfan_home_thumb
+          shift: [0.5 px, -0.5 py]
+
+        - ref: thumbfan_near_thumb
+          shift: [-0.5 px, -0.5 py]
+
+        - ref: matrix_pinky_bottom
+          shift: [1 px, -0.5 py]
+
+        - ref: matrix_pinky_bottom
+          shift: [0.5 px, -0.5 py]
+
+        - ref: matrix_pinky_bottom
+          shift: [-0.5 px, -0.5 py]
+  combo:
+    - name: board
+    - name: keys
+      operation: subtract
