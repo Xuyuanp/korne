@@ -6,6 +6,24 @@ units:
   px: kx + pd
   py: ky + pd
 points:
+  key:
+    footprints:
+      choc_hotswap:
+        type: choc
+        params:
+          hotswap: true
+          reverse: true
+          keycaps: true
+        nets:
+          from: =colrow
+          to: =column_net
+      diode:
+        type: diode
+        nets:
+          from: =colrow
+          to: =row_net
+        anchor:
+          shift: [0, -5]
   zones:
     matrix:
       key:
@@ -13,31 +31,41 @@ points:
         spread: kx
       columns:
         pinky:
+          key.column_net: col_pinky
         ring:
           key.stagger: 0.5 ky
+          key.column_net: col_ring
         middle:
           key.stagger: 0.2 ky
+          key.column_net: col_middle
         index:
           key.stagger: -0.2 ky
+          key.column_net: col_index
         inner:
           key.stagger: -0.1 ky
+          key.column_net: col_inner
       rows:
         bottom:
+          row_net: row_bottom
         home:
+          row_net: row_home
         top:
+          row_net: row_top
     thumbfan:
       anchor:
         ref: matrix_middle_bottom
-        shift: [0.5 kx, -1.5 ky]
+        shift: [0.5 kx, -1.4 ky]
       key:
         padding: ky
         spread: kx
       columns:
         near:
+          key.column_net: col_middle
         home:
           key:
             splay: -15
             origin: [-0.5 kx, -1 ky]
+            column_net: col_index
         far:
           key:
             splay: -15
@@ -45,8 +73,10 @@ points:
             rotate: 90
             width: 1.5 kx
             shift: [0, 0.25 kx]
+            column_net: col_inner
       rows:
         thumb:
+          row_net: row_thumb
 outlines:
   raw:
     - what: rectangle
@@ -89,11 +119,9 @@ outlines:
         - ref: matrix_inner_top
           shift: [0.5 px, 0.5 py]
 
-        - ref: matrix_inner_bottom
-          shift: [0.5 px, -0.5 py + 3.5]
+        - ref: matrix_inner_top
+          shift: [0.5 px + 23.65, 0.5 py]
 
-        - ref: thumbfan_far_thumb
-          shift: [0.75 px, 0.5 py]
         - ref: thumbfan_far_thumb
           shift: [0.75 px, -0.5 py]
         - ref: thumbfan_far_thumb
@@ -117,3 +145,57 @@ outlines:
     - name: board
     - name: keys
       operation: subtract
+pcbs:
+  mycorne:
+    outlines:
+      main:
+        outline: board
+    footprints:
+      choc_hotswap:
+        what: choc
+        where:
+        - /matrix_.*/
+        - /thumbfan_.*/
+        params:
+          keycaps: true
+          reverse: true
+          hotswap: true
+          from: "{{colrow}}"
+          to: "{{column_net}}"
+      diode:
+        what: diode
+        where:
+        - /matrix_.*/
+        - /thumbfan_.*/
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [0, -5]
+      mcu_left:
+        what: promicro
+        where:
+          ref:
+          - matrix_inner_top
+          shift: [20, -11]
+          rotate: 270
+        params:
+          orientation: down
+          P4: row_top
+          P5: row_home
+          P6: row_bottom
+          P7: row_thumb
+          P14: col_inner
+          P15: col_index
+          P18: col_middle
+          P19: col_ring
+          P20: col_pinky
+      mcu_right:
+        what: promicro
+        where:
+          ref:
+          - matrix_inner_top
+          shift: [22.5, -12.25]
+          rotate: 270
+        params:
+          orientation: up
