@@ -1,0 +1,47 @@
+units:
+  kx: cx
+  ky: cy
+  px: kx + 2
+  py: ky + 2
+points:
+  zones:
+    matrix:
+      key:
+        padding: ky
+        spread: kx
+      columns:
+        pinky:
+        ring:
+          key.stagger: 0.5 ky
+        middle:
+          key.stagger: 0.2 ky
+        index:
+          key.stagger: -0.2 ky
+        inner:
+          key.stagger: -0.1 ky
+      rows:
+        bottom:
+        home:
+        top:
+    thumbfan:
+      anchor:
+        ref: matrix_middle_bottom
+        shift: [0.5 kx, -1.5 ky]
+      key:
+        padding: ky
+        spread: kx
+      columns:
+        near:
+        home:
+          key:
+            splay: -15
+            origin: [-0.5 kx, -1 ky]
+        far:
+          key:
+            splay: -15
+            origin: [-0.5 kx, -1 ky]
+            rotate: 90
+            width: 1.5 kx
+            shift: [0, 0.25 kx]
+      rows:
+        thumb:
