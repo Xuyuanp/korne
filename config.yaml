@@ -222,7 +222,7 @@ pcbs:
         where:
           ref:
           - matrix_inner_top
-          shift: [21.5, -9]
+          shift: [20, -9]
           rotate: 270
         params:
           orientation: down
@@ -235,6 +235,15 @@ pcbs:
           P18: col_middle
           P19: col_ring
           P20: col_pinky
+      mcu_right:
+        what: promicro
+        where:
+          ref:
+          - matrix_inner_top
+          shift: [22.5, -10.25]
+          rotate: 270
+        params:
+          orientation: up
       reset:
         what: reset_button
         where:
