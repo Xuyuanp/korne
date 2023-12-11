@@ -241,7 +241,7 @@ pcbs:
           ref:
           - matrix_inner_top
           shift: [31, -31]
-          rotate: 90
+          rotate: -90
         params:
           from: RST
           to: GND
