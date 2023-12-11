@@ -26,6 +26,8 @@ points:
           shift: [0, -5]
   zones:
     matrix:
+      anchor:
+        shift: [100, -100]
       key:
         padding: ky
         spread: kx
@@ -194,32 +196,34 @@ pcbs:
         outline: board
     footprints:
       choc_hotswap:
-        what: choc
+        what: infused-kim/choc
         where:
         - /matrix_.*/
         - /thumbfan_.*/
         params:
-          keycaps: true
+          # keycaps: true
           reverse: true
           hotswap: true
+          solder: true
           from: "{{colrow}}"
           to: "{{column_net}}"
       diode:
-        what: diode
+        what: infused-kim/diode
         where:
         - /matrix_.*/
         - /thumbfan_.*/
         params:
+          include_tht: false
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
-          shift: [0, -5]
+          shift: [0, -3.5]
       mcu_left:
         what: promicro
         where:
           ref:
           - matrix_inner_top
-          shift: [20, -11]
+          shift: [21.5, -9]
           rotate: 270
         params:
           orientation: down
@@ -232,12 +236,32 @@ pcbs:
           P18: col_middle
           P19: col_ring
           P20: col_pinky
-      mcu_right:
-        what: promicro
+      reset:
+        what: reset_button
         where:
           ref:
           - matrix_inner_top
-          shift: [22.5, -12.25]
-          rotate: 270
+          shift: [31, -31]
+          rotate: 90
         params:
-          orientation: up
+          from: RST
+          to: GND
+      power:
+        what: infused-kim/switch_power
+        where:
+          ref:
+          - matrix_inner_top
+          shift: [31, -41]
+        params:
+          reverse: true
+          from: BAT+
+      jstph:
+        what: jstph
+        where:
+          ref:
+          - matrix_inner_top
+          shift: [24, -35]
+          rotate: -90
+        params:
+          neg: "BAT+"
+          pos: "GND"
