@@ -254,6 +254,7 @@ pcbs:
         params:
           reverse: true
           from: BAT+
+          to: RAW
       jstph:
         what: jstph
         where:
@@ -262,5 +263,5 @@ pcbs:
           shift: [24, -35]
           rotate: -90
         params:
-          neg: "BAT+"
-          pos: "GND"
+          pos: "BAT+"
+          neg: "GND"
