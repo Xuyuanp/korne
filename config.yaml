@@ -89,15 +89,18 @@ outlines:
       where: true
       size: [kx - 0.5, ky - 0.5]
       bound: false
-  board:
+  switches:
+    - what: rectangle
+      where: true
+      size: 14
+      bound: false
+  board_matrix:
     - what: polygon
-      operation: stack
-      fillet: 1
       points:
         - ref: matrix_pinky_top
           shift: [-0.5 px, 0.5 py]
         - ref: matrix_pinky_top
-          shift: [0.5 px - pd, 0.5 py]
+          shift: [0.5 px-pd, 0.5 py]
 
         - ref: matrix_ring_top
           shift: [-0.5 px, 0.5 py]
@@ -119,28 +122,67 @@ outlines:
         - ref: matrix_inner_top
           shift: [0.5 px, 0.5 py]
 
-        - ref: matrix_inner_top
-          shift: [0.5 px + 23.65, 0.5 py]
+        - ref: matrix_pinky_bottom
+          shift: [4 kx + 0.5 px, -0.5 py]
+
+        - ref: matrix_pinky_bottom
+          shift: [-0.5 px, -0.5 py]
+  board_thumbfan:
+    - what: polygon
+      points:
+        - ref: matrix_ring_bottom
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px, 2 py]
 
         - ref: thumbfan_far_thumb
-          shift: [0.75 px, -0.5 py]
+          shift: [0.25 kx + 0.5 px, -0.5 py]
         - ref: thumbfan_far_thumb
-          shift: [-0.75 px, -0.5 py]
+          shift: [-0.25 kx - 0.5 px, -0.5 py]
 
         - ref: thumbfan_home_thumb
           shift: [0.5 px, -0.5 py]
 
         - ref: thumbfan_near_thumb
           shift: [-0.5 px, -0.5 py]
-
-        - ref: matrix_pinky_bottom
-          shift: [1 px, -0.5 py]
-
-        - ref: matrix_pinky_bottom
-          shift: [0.5 px, -0.5 py]
-
-        - ref: matrix_pinky_bottom
-          shift: [-0.5 px, -0.5 py]
+  board_mcu_h:
+    - what: polygon
+      points:
+        - ref: matrix_inner_top
+          shift: [0.5 kx, 0.5 py]
+        - ref: matrix_inner_top
+          shift: [3 kx, 0.5 py]
+        - ref: matrix_inner_top
+          shift: [3 kx, -3 py]
+        - ref: matrix_inner_top
+          shift: [0.5 kx, -3 py]
+  board_mcu_v:
+    - what: polygon
+      points:
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px, -0.5 py]
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px + 4 kx, (4/1.732) kx - 0.5 py]
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px + 4 kx, (4/1.732) kx + 2 py]
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px, 2 py]
+  board_mcu:
+    - name: board_mcu_h
+    - name: board_mcu_v
+      operation: intersect
+  board:
+    - name: board_matrix
+    - name: board_thumbfan
+    - name: board_mcu
+      operation: add
+      fillet: 1
+  board_topplate:
+    - name: board_matrix
+    - name: board_thumbfan
+      operation: add
+    - name: switches
+      operation: subtract
+      fillet: 1
   combo:
     - name: board
     - name: keys
