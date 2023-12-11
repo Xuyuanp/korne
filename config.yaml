@@ -255,13 +255,13 @@ pcbs:
           reverse: true
           from: BAT+
           to: RAW
-      jstph:
-        what: jstph
-        where:
-          ref:
-          - matrix_inner_top
-          shift: [24, -35]
-          rotate: -90
-        params:
-          pos: "BAT+"
-          neg: "GND"
+      # jstph:
+      #   what: jstph
+      #   where:
+      #     ref:
+      #     - matrix_inner_top
+      #     shift: [24, -35]
+      #     rotate: -90
+      #   params:
+      #     pos: "BAT+"
+      #     neg: "GND"
