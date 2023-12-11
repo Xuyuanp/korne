@@ -36,13 +36,13 @@ points:
           key.stagger: 0.5 ky
           key.column_net: col_ring
         middle:
-          key.stagger: 0.2 ky
+          key.stagger: 0.3 ky
           key.column_net: col_middle
         index:
-          key.stagger: -0.2 ky
+          key.stagger: -0.3 ky
           key.column_net: col_index
         inner:
-          key.stagger: -0.1 ky
+          key.stagger: -0.2 ky
           key.column_net: col_inner
       rows:
         bottom:
@@ -54,7 +54,7 @@ points:
     thumbfan:
       anchor:
         ref: matrix_middle_bottom
-        shift: [0.5 kx, -1.4 ky]
+        shift: [0.5 kx, -1.5 ky]
       key:
         padding: ky
         spread: kx
