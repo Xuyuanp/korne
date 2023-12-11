@@ -1,8 +1,8 @@
 units:
   kx: cx
   ky: cy
-  pd: 2
 
+  pd: 2
   px: kx + pd
   py: ky + pd
 points:
@@ -144,7 +144,7 @@ outlines:
 
         - ref: thumbfan_near_thumb
           shift: [-0.5 px, -0.5 py]
-  board_mcu_h:
+  _board_mcu_h:
     - what: polygon
       points:
         - ref: matrix_inner_top
@@ -155,7 +155,7 @@ outlines:
           shift: [3 kx, -3 py]
         - ref: matrix_inner_top
           shift: [0.5 kx, -3 py]
-  board_mcu_v:
+  _board_mcu_v:
     - what: polygon
       points:
         - ref: thumbfan_far_thumb
@@ -167,8 +167,8 @@ outlines:
         - ref: thumbfan_far_thumb
           shift: [0.25 kx + 0.5 px, 2 py]
   board_mcu:
-    - name: board_mcu_h
-    - name: board_mcu_v
+    - name: _board_mcu_h
+    - name: _board_mcu_v
       operation: intersect
   board:
     - name: board_matrix
@@ -188,7 +188,7 @@ outlines:
     - name: keys
       operation: subtract
 pcbs:
-  mycorne:
+  board:
     outlines:
       main:
         outline: board
