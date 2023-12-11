@@ -216,7 +216,7 @@ pcbs:
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
-          shift: [0, -5]
+          shift: [1, -5]
       mcu_left:
         what: promicro
         where:
