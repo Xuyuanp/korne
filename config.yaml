@@ -204,7 +204,6 @@ pcbs:
           # keycaps: true
           reverse: true
           hotswap: true
-          solder: true
           from: "{{colrow}}"
           to: "{{column_net}}"
       diode:
