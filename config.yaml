@@ -195,34 +195,89 @@ pcbs:
       main:
         outline: board
     footprints:
-      choc_hotswap:
+      choc_hotswap_matrix:
         what: infused-kim/choc
         where:
         - /matrix_.*/
-        - /thumbfan_.*/
         params:
-          # keycaps: true
           reverse: true
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
-      diode:
+      choc_hotswap_thumb_far:
+        what: infused-kim/choc
+        where:
+        - /thumbfan_far_thumb/
+        params:
+          reverse: true
+          hotswap: true
+          from: "{{colrow}}"
+          to: "{{column_net}}"
+          keycaps_x: 1.5 kx
+      choc_hotswap_thumb_home:
+        what: infused-kim/choc
+        where:
+        - /thumbfan_home_thumb/
+        params:
+          reverse: true
+          hotswap: true
+          from: "{{colrow}}"
+          to: "{{column_net}}"
+      choc_hotswap_thumb_near:
+        what: infused-kim/choc
+        where:
+        - /thumbfan_near_thumb/
+        params:
+          reverse: true
+          hotswap: true
+          from: "{{colrow}}"
+          to: "{{column_net}}"
+      diode_top:
         what: infused-kim/diode
         where:
-        - /matrix_.*/
-        - /thumbfan_.*/
+        - /matrix_.*_top/
+        params:
+          include_tht: false
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [1, -4.5]
+      diode_middle:
+        what: infused-kim/diode
+        where:
+        - /matrix_.*_home/
+        params:
+          include_tht: false
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [1, 0.5 * py + 0.5]
+      diode_bottom:
+        what: infused-kim/diode
+        where:
+        - /matrix_.*_bottom/
         params:
           include_tht: false
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
           shift: [1, -5]
-      mcu_left:
+      diode_thumb:
+        what: infused-kim/diode
+        where:
+        - /thumbfan_.*/
+        params:
+          include_tht: false
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [1, 0.5 * py + 0.5]
+      mcu:
         what: promicro
         where:
           ref:
           - matrix_inner_top
-          shift: [20, -9]
+          shift: [21.5, -9.5]
           rotate: 270
         params:
           orientation: down
@@ -235,21 +290,20 @@ pcbs:
           P18: col_middle
           P19: col_ring
           P20: col_pinky
-      mcu_right:
-        what: promicro
+      niceview:
+        what: infused-kim/nice_view
         where:
           ref:
           - matrix_inner_top
-          shift: [22.5, -10.25]
-          rotate: 270
+          shift: [21.5, -12]
         params:
-          orientation: up
+          reverse: true
       reset:
         what: reset_button
         where:
           ref:
           - matrix_inner_top
-          shift: [31, -31]
+          shift: [31, -29.5]
           rotate: -90
         params:
           from: RST
@@ -259,7 +313,7 @@ pcbs:
         where:
           ref:
           - matrix_inner_top
-          shift: [31, -41]
+          shift: [31, -39]
         params:
           reverse: true
           from: BAT+
@@ -269,7 +323,7 @@ pcbs:
         where:
           ref:
           - matrix_inner_top
-          shift: [24, -35]
+          shift: [24, -35.5]
           rotate: -90
         params:
           pos: "BAT+"
