@@ -244,7 +244,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, -4.5]
-          rotate: 180
+          # rotate: 180
       diode_middle:
         what: infused-kim/diode
         where:
@@ -255,7 +255,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, 0.5 * py + 0.5]
-          rotate: 180
+          # rotate: 180
       diode_bottom:
         what: infused-kim/diode
         where:
@@ -266,7 +266,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, -5]
-          rotate: 180
+          # rotate: 180
       diode_thumb:
         what: infused-kim/diode
         where:
@@ -277,7 +277,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, 0.5 * py + 0.5]
-          rotate: 180
+          # rotate: 180
       mcu:
         what: infused-kim/nice_nano_pretty
         where:
@@ -285,6 +285,7 @@ pcbs:
           - _helper_mcu_middle
           shift: [0, -0.5 mcu_height]
         params:
+          # traces: false
           P4: row_top
           P5: row_home
           P6: row_bottom
@@ -332,7 +333,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.25, -mcu_height - 4]
+          shift: [-1.5, -mcu_height - 4]
         params:
           reverse: true
       power:
