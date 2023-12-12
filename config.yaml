@@ -5,25 +5,11 @@ units:
   pd: 2
   px: kx + pd
   py: ky + pd
+
+  mcu_width: 17.78
+  mcu_height: 33
+
 points:
-  key:
-    footprints:
-      choc_hotswap:
-        type: choc
-        params:
-          hotswap: true
-          reverse: true
-          keycaps: true
-        nets:
-          from: =colrow
-          to: =column_net
-      diode:
-        type: diode
-        nets:
-          from: =colrow
-          to: =row_net
-        anchor:
-          shift: [0, -5]
   zones:
     matrix:
       anchor:
@@ -79,21 +65,39 @@ points:
       rows:
         thumb:
           row_net: row_thumb
+    _helper_topright:
+      anchor:
+        - ref: matrix_inner_top
+          shift: [0.5 px, 0.5 py]
+          affect: "y"
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px, -0.5 py]
+          affect: "x"
+    _helper_mcu_middle:
+      anchor:
+        - aggregate.parts:
+          - ref: matrix_inner_top
+            shift: [0.5 px, 0.5 py]
+          - ref: _helper_topright
+
 outlines:
   raw:
     - what: rectangle
-      where: true
+      where:
+      - -/_helper_.*/
       asym: source
       size: [kx + 2, ky + 2]
       corner: pd
   keys:
     - what: rectangle
-      where: true
+      where:
+      - -/_helper_.*/
       size: [kx - 0.5, ky - 0.5]
       bound: false
   switches:
     - what: rectangle
-      where: true
+      where:
+      - -/_helper_.*/
       size: 14
       bound: false
   board_matrix:
@@ -151,10 +155,9 @@ outlines:
       points:
         - ref: matrix_inner_top
           shift: [0.5 kx, 0.5 py]
-        - ref: matrix_inner_top
-          shift: [3 kx, 0.5 py]
-        - ref: matrix_inner_top
-          shift: [3 kx, -3 py]
+        - ref: _helper_topright
+        - ref: _helper_topright
+          shift: [0, -3.5 py]
         - ref: matrix_inner_top
           shift: [0.5 kx, -3 py]
   _board_mcu_v:
@@ -162,12 +165,11 @@ outlines:
       points:
         - ref: thumbfan_far_thumb
           shift: [0.25 kx + 0.5 px, -0.5 py]
+        - ref: _helper_topright
+        - ref: _helper_topright
+          shift: [-3 kx, 0]
         - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px + 4 kx, (4/1.732) kx - 0.5 py]
-        - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px + 4 kx, (4/1.732) kx + 2 py]
-        - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px, 2 py]
+          shift: [0.25 kx + 0.5 px, 3 py]
   board_mcu:
     - name: _board_mcu_h
     - name: _board_mcu_v
@@ -242,6 +244,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, -4.5]
+          rotate: 180
       diode_middle:
         what: infused-kim/diode
         where:
@@ -252,6 +255,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, 0.5 * py + 0.5]
+          rotate: 180
       diode_bottom:
         what: infused-kim/diode
         where:
@@ -262,6 +266,7 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, -5]
+          rotate: 180
       diode_thumb:
         what: infused-kim/diode
         where:
@@ -272,15 +277,14 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, 0.5 * py + 0.5]
+          rotate: 180
       mcu:
-        what: promicro
+        what: infused-kim/nice_nano_pretty
         where:
           ref:
-          - matrix_inner_top
-          shift: [21.5, -9.5]
-          rotate: 270
+          - _helper_mcu_middle
+          shift: [0, -0.5 mcu_height]
         params:
-          orientation: down
           P4: row_top
           P5: row_home
           P6: row_bottom
@@ -290,30 +294,53 @@ pcbs:
           P18: col_middle
           P19: col_ring
           P20: col_pinky
+
+          RAW_label: 'RAW'
+          GND_label: 'GND'
+          RST_label: 'RST'
+          VCC_label: 'VCC'
+          P21_label: 'P21'
+          P20_label: 'P20'
+          P19_label: 'P19'
+          P18_label: 'P18'
+          P15_label: 'P15'
+          P14_label: 'P14'
+          P16_label: 'P16'
+          P10_label: 'P10'
+
+          P1_label: 'P1'
+          P0_label: 'P0'
+          P2_label: 'P2'
+          P3_label: 'P3'
+          P4_label: 'P4'
+          P5_label: 'P5'
+          P6_label: 'P6'
+          P7_label: 'P7'
+          P8_label: 'P8'
+          P9_label: 'P9'
+
       niceview:
         what: infused-kim/nice_view
         where:
           ref:
-          - matrix_inner_top
-          shift: [21.5, -12]
+          - _helper_mcu_middle
+          shift: [0, -0.5 mcu_height - 5]
         params:
           reverse: true
       reset:
-        what: samoklava/footprints/reset_button
+        what: infused-kim/switch_reset
         where:
           ref:
-          - matrix_inner_top
-          shift: [31, -29.5]
-          rotate: -90
+          - _helper_topright
+          shift: [-1.25, -mcu_height - 4]
         params:
-          from: RST
-          to: GND
+          reverse: true
       power:
         what: infused-kim/switch_power
         where:
           ref:
-          - matrix_inner_top
-          shift: [31, -39]
+          - _helper_topright
+          shift: [-1.5, -mcu_height - 13]
         params:
           reverse: true
           from: BAT+
@@ -326,5 +353,5 @@ pcbs:
           shift: [24, -35.5]
           rotate: -90
         params:
-          pos: "BAT+"
-          neg: "GND"
+          neg: "BAT+"
+          pos: "GND"
