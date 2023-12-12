@@ -1,3 +1,6 @@
 [submodule "footprints/infused-kim"]
 	path = footprints/infused-kim
 	url = git@github.com:infused-kim/kb_ergogen_fp.git
+[submodule "footprints/samoklava"]
+	path = footprints/samoklava
+	url = https://github.com/soundmonster/samoklava.git

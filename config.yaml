@@ -299,7 +299,7 @@ pcbs:
         params:
           reverse: true
       reset:
-        what: reset_button
+        what: samoklava/footprints/reset_button
         where:
           ref:
           - matrix_inner_top
