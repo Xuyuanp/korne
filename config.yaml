@@ -24,7 +24,7 @@ points:
           key.stagger: 0.5 ky
           key.column_net: col_ring
         middle:
-          key.stagger: 0.3 ky
+          key.stagger: 0.2 ky
           key.column_net: col_middle
         index:
           key.stagger: -0.3 ky
@@ -206,6 +206,16 @@ pcbs:
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
+      choc_hotswap_thumb:
+        what: infused-kim/choc
+        where:
+        - /thumbfan_home_thumb/
+        - /thumbfan_near_thumb/
+        params:
+          reverse: true
+          hotswap: true
+          from: "{{colrow}}"
+          to: "{{column_net}}"
       choc_hotswap_thumb_far:
         what: infused-kim/choc
         where:
@@ -216,57 +226,16 @@ pcbs:
           from: "{{colrow}}"
           to: "{{column_net}}"
           keycaps_x: 1.5 kx
-      choc_hotswap_thumb_home:
-        what: infused-kim/choc
-        where:
-        - /thumbfan_home_thumb/
-        params:
-          reverse: true
-          hotswap: true
-          from: "{{colrow}}"
-          to: "{{column_net}}"
-      choc_hotswap_thumb_near:
-        what: infused-kim/choc
-        where:
-        - /thumbfan_near_thumb/
-        params:
-          reverse: true
-          hotswap: true
-          from: "{{colrow}}"
-          to: "{{column_net}}"
-      diode_top:
+      diode_matrix:
         what: infused-kim/diode
         where:
-        - /matrix_.*_top/
+        - /matrix_.*/
         params:
           include_tht: false
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
           shift: [1, -4.5]
-          rotate: 180
-      diode_middle:
-        what: infused-kim/diode
-        where:
-        - /matrix_.*_home/
-        params:
-          include_tht: false
-          from: "{{colrow}}"
-          to: "{{row_net}}"
-        adjust:
-          shift: [1, 0.5 * py + 0.5]
-          rotate: 180
-      diode_bottom:
-        what: infused-kim/diode
-        where:
-        - /matrix_.*_bottom/
-        params:
-          include_tht: false
-          from: "{{colrow}}"
-          to: "{{row_net}}"
-        adjust:
-          shift: [1, -5]
-          rotate: 180
       diode_thumb:
         what: infused-kim/diode
         where:
@@ -277,7 +246,6 @@ pcbs:
           to: "{{row_net}}"
         adjust:
           shift: [1, 0.5 * py + 0.5]
-          rotate: 180
       mcu:
         what: infused-kim/nice_nano_pretty
         where:
@@ -294,6 +262,10 @@ pcbs:
           P18: col_middle
           P19: col_ring
           P20: col_pinky
+          # nice!view
+          P1: CS
+          P2: MOSI
+          P3: SCK
 
           RAW_label: 'RAW'
           GND_label: 'GND'
@@ -332,7 +304,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.25, -mcu_height - 4]
+          shift: [-1.5, -mcu_height - 4]
         params:
           reverse: true
       power:
@@ -340,7 +312,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.5, -mcu_height - 13]
+          shift: [-1.75, -mcu_height - 13]
         params:
           reverse: true
           from: BAT+
