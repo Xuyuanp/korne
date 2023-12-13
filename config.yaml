@@ -21,10 +21,10 @@ points:
         pinky:
           key.column_net: col_pinky
         ring:
-          key.stagger: 0.5 ky
+          key.stagger: 0.6 ky
           key.column_net: col_ring
         middle:
-          key.stagger: 0.2 ky
+          key.stagger: 0.25 ky
           key.column_net: col_middle
         index:
           key.stagger: -0.3 ky
@@ -79,6 +79,26 @@ points:
           - ref: matrix_inner_top
             shift: [0.5 px, 0.5 py]
           - ref: _helper_topright
+    _helper_screw_holes_topleft:
+      anchor:
+        - ref: matrix_pinky_top
+          shift: [0.5 kx, -0.5 ky]
+    _helper_screw_holes_bottomleft:
+      anchor:
+        - ref: matrix_pinky_bottom
+          shift: [0.5 kx, 0.5 ky]
+    _helper_screw_holes_topright:
+      anchor:
+        - ref: matrix_index_top
+          shift: [0.5 kx, -0.5 ky]
+    _helper_screw_holes_palm:
+      anchor:
+        - ref: matrix_middle_bottom
+          shift: [-0.3 kx, -1.1 ky]
+    _helper_screw_holes_thumb:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [0, 0.5 py + 2]
 
 outlines:
   raw:
@@ -174,23 +194,33 @@ outlines:
     - name: _board_mcu_h
     - name: _board_mcu_v
       operation: intersect
+  screw_holes:
+  - what: circle
+    where:
+    - /_helper_screw_holes_.*/
+    radius: 1.05
+    bound: false
+  all_holes:
+    - switches
+    - screw_holes
+  keywell:
+    - board_matrix
+    - board_thumbfan
   board:
-    - name: board_matrix
-    - name: board_thumbfan
+    - keywell
     - name: board_mcu
-      operation: add
       fillet: 1
-  board_topplate:
-    - name: board_matrix
-    - name: board_thumbfan
-      operation: add
-    - name: switches
-      operation: subtract
+  topplate:
+    - name: keywell
       fillet: 1
+    - -all_holes
+  bottomplate:
+    - board
+    - -screw_holes
   combo:
-    - name: board
-    - name: keys
-      operation: subtract
+    - board
+    - -keys
+
 pcbs:
   board:
     outlines:
@@ -226,26 +256,17 @@ pcbs:
           from: "{{colrow}}"
           to: "{{column_net}}"
           keycaps_x: 1.5 kx
-      diode_matrix:
+      diode:
         what: infused-kim/diode
         where:
-        - /matrix_.*/
+        - -/helper.*/
         params:
-          include_tht: false
+          include_tht: true
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
-          shift: [1, -4.5]
-      diode_thumb:
-        what: infused-kim/diode
-        where:
-        - /thumbfan_.*/
-        params:
-          include_tht: false
-          from: "{{colrow}}"
-          to: "{{row_net}}"
-        adjust:
-          shift: [1, 0.5 * py + 0.5]
+          shift: [1, -7]
+          rotate: 180
       mcu:
         what: infused-kim/nice_nano_pretty
         where:
@@ -296,9 +317,10 @@ pcbs:
         where:
           ref:
           - _helper_mcu_middle
-          shift: [0, -0.5 mcu_height - 5]
+          shift: [0, -0.5 mcu_height - 3]
         params:
           reverse: true
+          jumpers_at_bottom: true
       reset:
         what: infused-kim/switch_reset
         where:
@@ -325,5 +347,30 @@ pcbs:
           shift: [24, -35.5]
           rotate: -90
         params:
-          neg: "BAT+"
-          pos: "GND"
+          neg: "GND"
+          pos: "BAT+"
+      mounting_holes:
+        what: infused-kim/mounting_hole
+        where:
+          - /_helper_screw_holes_.*/
+        params:
+          outline: 0.5
+      info_l:
+        what: text
+        where:
+          ref:
+          - matrix_pinky_bottom
+          shift: [0.6 kx, -2]
+        params:
+          text: "mycorne\\nby Xuyuan Pang"
+          justify: left
+      info_r:
+        what: text
+        where:
+          ref:
+            - matrix_pinky_bottom
+          shift: [0.6 kx, -2]
+        params:
+          layer: B.SilkS
+          text: "mycorne\\nby Xuyuan Pang"
+          justify: right mirror
