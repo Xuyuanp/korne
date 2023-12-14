@@ -9,6 +9,9 @@ units:
   mcu_width: 17.78
   mcu_height: 33
 
+  m2r: 1.05 # radius of m2 screw
+  shs: m2r # screw hole size
+
 points:
   zones:
     matrix:
@@ -99,6 +102,14 @@ points:
       anchor:
         - ref: thumbfan_far_thumb
           shift: [0, 0.5 py + 2]
+    _helper_mcu_cover_holes_low:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [0.25 kx + 0.5 px + 3, -0.2 py]
+    _helper_mcu_cover_holes_high:
+      anchor:
+        - ref: _helper_mcu_cover_holes_low
+          shift: [0, 1 py]
 
 outlines:
   raw:
@@ -198,9 +209,13 @@ outlines:
   - what: circle
     where:
     - /_helper_screw_holes_.*/
-    radius: 1.05
-    bound: false
-  all_holes:
+    radius: shs
+  mcu_cover_holes:
+  - what: circle
+    where:
+    - /_helper_mcu_cover_holes_.*/
+    radius: shs
+  keywell_holes:
     - switches
     - screw_holes
   keywell:
@@ -213,10 +228,13 @@ outlines:
   topplate:
     - name: keywell
       fillet: 1
-    - -all_holes
+    - -keywell_holes
   bottomplate:
     - board
     - -screw_holes
+  mcu_cover:
+    - board_mcu
+    - -mcu_cover_holes
   combo:
     - board
     - -keys
@@ -349,12 +367,20 @@ pcbs:
         params:
           neg: "GND"
           pos: "BAT+"
+
       mounting_holes:
         what: infused-kim/mounting_hole
         where:
           - /_helper_screw_holes_.*/
         params:
-          outline: 0.5
+          outline: 0.2
+      mcu_cover_holes:
+        what: infused-kim/mounting_hole
+        where:
+          - /_helper_mcu_cover_holes_.*/
+        params:
+          outline: 0.2
+
       info_l:
         what: text
         where:
