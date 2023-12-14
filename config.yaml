@@ -181,9 +181,8 @@ outlines:
           shift: [0.25 kx + 0.5 px, -0.5 py]
         - ref: thumbfan_far_thumb
           shift: [-0.25 kx - 0.5 px, -0.5 py]
-
-        - ref: thumbfan_home_thumb
-          shift: [0.5 px, -0.5 py]
+        - ref: thumbfan_far_thumb
+          shift: [-0.25 kx - 0.5 px, 0.5 py]
 
         - ref: thumbfan_near_thumb
           shift: [-0.5 px, -0.5 py]
@@ -372,12 +371,13 @@ pcbs:
           reverse: true
           from: BAT+
           to: RAW
+
       jstph:
         what: jstph
         where:
           ref:
-          - matrix_inner_top
-          shift: [24, -35.5]
+          - _helper_topright
+          shift: [-7.5, -mcu_height - 12]
           rotate: -90
         params:
           neg: "GND"
@@ -388,13 +388,13 @@ pcbs:
         where:
           - /_helper_screw_holes_.*/
         params:
-          outline: 0.2
+          outline: 0.5
       mcu_cover_holes:
         what: infused-kim/mounting_hole
         where:
           - /_helper_mcu_cover_holes_.*/
         params:
-          outline: 0.2
+          outline: 0.5
 
       info_l:
         what: text
