@@ -131,6 +131,12 @@ outlines:
       - -/_helper_.*/
       size: 14
       bound: false
+  switches_outer:
+    - what: rectangle
+      where:
+      - -/_helper_.*/
+      size: 15.5
+      bound: false
   board_matrix:
     - what: polygon
       points:
@@ -238,7 +244,16 @@ outlines:
   combo:
     - board
     - -keys
-
+cases:
+  top:
+    - name: topplate
+      extrude: 2.2
+    - name: switches_outer
+      extrude: 0.8
+      operation: subtract
+  bottom:
+    - name: board
+      extrude: 2
 pcbs:
   board:
     outlines:
