@@ -15,8 +15,6 @@ units:
 points:
   zones:
     matrix:
-      anchor:
-        shift: [100, -100]
       key:
         padding: ky
         spread: kx
@@ -71,16 +69,16 @@ points:
     _helper_topright:
       anchor:
         - ref: matrix_inner_top
-          shift: [0.5 px, 0.5 py]
+          shift: [0, 0.5 py]
           affect: "y"
         - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px, -0.5 py]
+          shift: [0.75 kx, -0.5 py]
           affect: "x"
     _helper_mcu_middle:
       anchor:
         - aggregate.parts:
           - ref: matrix_inner_top
-            shift: [0.5 px, 0.5 py]
+            shift: [0.5 kx, 0.5 py]
           - ref: _helper_topright
     _helper_screw_holes_topleft:
       anchor:
@@ -105,11 +103,112 @@ points:
     _helper_mcu_cover_holes_low:
       anchor:
         - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px + 3, -0.2 py]
+          shift: [0.75 kx + 3, -0.2 py]
     _helper_mcu_cover_holes_high:
       anchor:
         - ref: _helper_mcu_cover_holes_low
           shift: [0, 1 py]
+
+templates:
+  board_matrix:
+    $params: [_padding]
+    what: polygon
+    points:
+      - ref: matrix_pinky_top
+        shift: [-0.5 (kx + _padding), 0.5 (ky + _padding)]
+
+      - - ref: matrix_ring_top
+          shift: [-0.5 (kx + _padding), 0]
+          affect: "x"
+        - ref: matrix_pinky_top
+          shift: [0, 0.5 (ky + _padding)]
+          affect: "y"
+
+      - ref: matrix_ring_top
+        shift: [-0.5 (kx + _padding), 0.5 (ky + _padding)]
+
+      - - ref: matrix_middle_top
+          shift: [-0.5 (kx + _padding), 0]
+          affect: "x"
+        - ref: matrix_ring_top
+          shift: [0, 0.5 (ky + _padding)]
+          affect: "y"
+
+      - ref: matrix_middle_top
+        shift: [-0.5 (kx + _padding), 0.5 (ky + _padding)]
+      - ref: matrix_middle_top
+        shift: [0.5 (kx + _padding), 0.5 (ky + _padding)]
+
+      - - ref: matrix_middle_top
+          shift: [0.5 (kx + _padding), 0]
+          affect: "x"
+        - ref: matrix_index_top
+          shift: [0, 0.5 (ky + _padding)]
+          affect: "y"
+
+      - ref: matrix_index_top
+        shift: [0.5 (kx + _padding), 0.5 (ky + _padding)]
+
+      - - ref: matrix_index_top
+          shift: [0.5 (kx + _padding), 0]
+          affect: "x"
+        - ref: matrix_inner_top
+          shift: [0, 0.5 (ky + _padding)]
+          affect: "y"
+
+      - ref: matrix_inner_top
+        shift: [0.5 kx, 0.5 (ky + _padding)] # X axis shift 0.5kx to avoid overlap
+
+      - ref: matrix_pinky_bottom
+        shift: [4.5 kx, -0.5 (ky + _padding)]
+
+      - ref: matrix_pinky_bottom
+        shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
+
+  board_thumbfan:
+    $params: [_padding]
+    what: polygon
+    points:
+      - ref: matrix_ring_bottom
+
+      - ref: thumbfan_far_thumb
+        shift: [0.75 kx, 2 (ky + _padding)]
+
+      - ref: thumbfan_far_thumb
+        shift: [0.75 kx, -0.5 (ky + _padding)]
+
+      - ref: thumbfan_far_thumb
+        shift: [-0.25 kx - 0.5 (kx + _padding), -0.5 (ky + _padding)]
+
+      - ref: thumbfan_far_thumb
+        shift: [-0.25 kx - 0.5 (kx + _padding), 0.5 ky]
+
+      - ref: thumbfan_near_thumb
+        shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
+
+  _board_mcu_v:
+    $params: [_padding]
+    what: polygon
+    points:
+      - ref: matrix_inner_top
+        shift: [0.5 kx, 0.5 (ky + _padding)]
+      - ref: _helper_topright
+      - ref: _helper_topright
+        shift: [0, -5 (ky + _padding)]
+      - ref: matrix_inner_top
+        shift: [0.5 kx, -5 (ky + _padding)]
+
+  _board_mcu_h:
+    $params: [_padding]
+    what: polygon
+    points:
+      - ref: thumbfan_far_thumb
+        shift: [0.75 kx, -0.5 (ky + _padding)]
+      - ref: _helper_topright
+      - ref: _helper_topright
+        shift: [-3 kx, 0]
+      - ref: thumbfan_far_thumb
+        shift: [0.75 kx, 3 (ky + _padding)]
 
 outlines:
   raw:
@@ -138,77 +237,16 @@ outlines:
       size: 15.5
       bound: false
   board_matrix:
-    - what: polygon
-      points:
-        - ref: matrix_pinky_top
-          shift: [-0.5 px, 0.5 py]
-        - ref: matrix_pinky_top
-          shift: [0.5 px-pd, 0.5 py]
-
-        - ref: matrix_ring_top
-          shift: [-0.5 px, 0.5 py]
-        - ref: matrix_ring_top
-          shift: [0.5 px - pd, 0.5 py]
-
-        - ref: matrix_middle_top
-          shift: [-0.5 px, 0.5 py]
-        - ref: matrix_middle_top
-          shift: [0.5 px, 0.5 py]
-
-        - ref: matrix_index_top
-          shift: [-0.5 px + pd, 0.5 py]
-        - ref: matrix_index_top
-          shift: [0.5 px, 0.5 py]
-
-        - ref: matrix_inner_top
-          shift: [-0.5 px + pd, 0.5 py]
-        - ref: matrix_inner_top
-          shift: [0.5 px, 0.5 py]
-
-        - ref: matrix_pinky_bottom
-          shift: [4 kx + 0.5 px, -0.5 py]
-
-        - ref: matrix_pinky_bottom
-          shift: [-0.5 px, -0.5 py]
+    - $extends: templates.board_matrix
+      $args: [pd]
   board_thumbfan:
-    - what: polygon
-      points:
-        - ref: matrix_ring_bottom
-        - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px, 2 py]
-
-        - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px, -0.5 py]
-        - ref: thumbfan_far_thumb
-          shift: [-0.25 kx - 0.5 px, -0.5 py]
-        - ref: thumbfan_far_thumb
-          shift: [-0.25 kx - 0.5 px, 0.5 py]
-
-        - ref: thumbfan_near_thumb
-          shift: [-0.5 px, -0.5 py]
-  _board_mcu_h:
-    - what: polygon
-      points:
-        - ref: matrix_inner_top
-          shift: [0.5 kx, 0.5 py]
-        - ref: _helper_topright
-        - ref: _helper_topright
-          shift: [0, -3.5 py]
-        - ref: matrix_inner_top
-          shift: [0.5 kx, -3 py]
-  _board_mcu_v:
-    - what: polygon
-      points:
-        - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px, -0.5 py]
-        - ref: _helper_topright
-        - ref: _helper_topright
-          shift: [-3 kx, 0]
-        - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 px, 3 py]
+    - $extends: templates.board_thumbfan
+      $args: [pd]
   board_mcu:
-    - name: _board_mcu_h
-    - name: _board_mcu_v
+    - $extends: templates._board_mcu_v
+      $args: [pd]
+    - $extends: templates._board_mcu_h
+      $args: [pd]
       operation: intersect
   screw_holes:
   - what: circle
@@ -229,12 +267,12 @@ outlines:
   board:
     - keywell
     - name: board_mcu
-      fillet: 1
-  topplate:
+      fillet: 1.5
+  topplate_fr4:
     - name: keywell
-      fillet: 1
+      fillet: 1.5
     - -keywell_holes
-  bottomplate:
+  bottomplate_fr4:
     - board
     - -screw_holes
   mcu_cover:
@@ -245,7 +283,7 @@ outlines:
     - -keys
 cases:
   top:
-    - name: topplate
+    - name: topplate_fr4
       extrude: 2.2
     - name: switches_outer
       extrude: 0.8
@@ -254,6 +292,14 @@ cases:
     - name: board
       extrude: 2
 pcbs:
+  board_topplate:
+    outlines:
+      main:
+        outline: topplate_fr4
+  board_bottomplate:
+    outlines:
+      main:
+        outline: bottomplate_fr4
   board:
     outlines:
       main:
