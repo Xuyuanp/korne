@@ -1,16 +1,26 @@
+meta:
+  version: v0.1
+
 units:
-  kx: cx
-  ky: cy
+  kx: U # MX-spaced columns
+  ky: cy # choc-spaced rows
 
   pd: 2
   px: kx + pd
   py: ky + pd
 
+  cpd: 4
+
   mcu_width: 17.78
   mcu_height: 33
 
+  pcb_height: 1.6
+  bottom_height: 1.8
+  standoff_height: 3
+  socket_height: 2
+
   m2r: 1.05 # radius of m2 screw
-  shs: m2r # screw hole size
+  screw_hole_size: m2r # screw hole size
 
 points:
   zones:
@@ -22,13 +32,13 @@ points:
         pinky:
           key.column_net: col_pinky
         ring:
-          key.stagger: 0.6 ky
+          key.stagger: 0.65 ky
           key.column_net: col_ring
         middle:
           key.stagger: 0.25 ky
           key.column_net: col_middle
         index:
-          key.stagger: -0.3 ky
+          key.stagger: -0.35 ky
           key.column_net: col_index
         inner:
           key.stagger: -0.2 ky
@@ -43,7 +53,7 @@ points:
     thumbfan:
       anchor:
         ref: matrix_middle_bottom
-        shift: [0.5 kx, -1.5 ky]
+        shift: [0.5 kx, -1.6 ky]
       key:
         padding: ky
         spread: kx
@@ -66,6 +76,7 @@ points:
       rows:
         thumb:
           row_net: row_thumb
+
     _helper_topright:
       anchor:
         - ref: matrix_inner_top
@@ -103,11 +114,11 @@ points:
     _helper_mcu_cover_holes_low:
       anchor:
         - ref: thumbfan_far_thumb
-          shift: [0.75 kx + 3, -0.2 py]
+          shift: [0.25 kx + 0.5 * px + 3, -0.18 ky]
     _helper_mcu_cover_holes_high:
       anchor:
         - ref: _helper_mcu_cover_holes_low
-          shift: [0, 1 py]
+          shift: [0, 1.05 py]
 
 templates:
   board_matrix:
@@ -181,7 +192,7 @@ templates:
         shift: [-0.25 kx - 0.5 (kx + _padding), -0.5 (ky + _padding)]
 
       - ref: thumbfan_far_thumb
-        shift: [-0.25 kx - 0.5 (kx + _padding), 0.5 ky]
+        shift: [-0.25 kx - 0.5 (kx + _padding), 0.5 (ky + _padding)]
 
       - ref: thumbfan_near_thumb
         shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
@@ -193,8 +204,9 @@ templates:
       - ref: matrix_inner_top
         shift: [0.5 kx, 0.5 (ky + _padding)]
       - ref: _helper_topright
+        shift: [0.5 * (_padding - pd), 0.5 * (_padding - pd)]
       - ref: _helper_topright
-        shift: [0, -5 (ky + _padding)]
+        shift: [0.5 * (_padding - pd), 0.5 * (_padding - pd) - 5 * (ky + _padding)]
       - ref: matrix_inner_top
         shift: [0.5 kx, -5 (ky + _padding)]
 
@@ -205,8 +217,9 @@ templates:
       - ref: thumbfan_far_thumb
         shift: [0.75 kx, -0.5 (ky + _padding)]
       - ref: _helper_topright
+        shift: [0.5 * (_padding - pd), 0.5 * (_padding - pd)]
       - ref: _helper_topright
-        shift: [-3 kx, 0]
+        shift: [0.5 * (_padding - pd) -3 kx, 0.5 * (_padding - pd)]
       - ref: thumbfan_far_thumb
         shift: [0.75 kx, 3 (ky + _padding)]
 
@@ -229,13 +242,11 @@ outlines:
       where:
       - -/_helper_.*/
       size: 14
-      bound: false
   switches_outer:
     - what: rectangle
       where:
       - -/_helper_.*/
-      size: 15.5
-      bound: false
+      size: 15
   board_matrix:
     - $extends: templates.board_matrix
       $args: [pd]
@@ -252,12 +263,12 @@ outlines:
   - what: circle
     where:
     - /_helper_screw_holes_.*/
-    radius: shs
+    radius: screw_hole_size
   mcu_cover_holes:
   - what: circle
     where:
     - /_helper_mcu_cover_holes_.*/
-    radius: shs
+    radius: screw_hole_size
   keywell_holes:
     - switches
     - screw_holes
@@ -281,16 +292,80 @@ outlines:
   combo:
     - board
     - -keys
+
+  # for cases
+  _case_matrix:
+    - $extends: templates.board_matrix
+      $args: [cpd]
+  _case_thumbfan:
+    - $extends: templates.board_thumbfan
+      $args: [cpd]
+  _case_mcu:
+    - $extends: templates._board_mcu_v
+      $args: [cpd]
+    - $extends: templates._board_mcu_h
+      $args: [cpd]
+      operation: intersect
+
+  _case_keywell:
+    - _case_matrix
+    - _case_thumbfan
+  _case_board:
+    - _case_matrix
+    - _case_thumbfan
+    - name: _case_mcu
+      fillet: 1.5
+  _case_top:
+    - name: _case_keywell
+      fillet: 1.5
+    - -keywell_holes
+
+  _case_mountings_outer:
+    - what: circle
+      where:
+      - /_helper_screw_holes_.*/
+      radius: 2.3
+  _case_mountings_inner:
+    - what: circle
+      where:
+      - /_helper_screw_holes_.*/
+      radius: 1.35
+
 cases:
   top:
-    - name: topplate_fr4
-      extrude: 2.2
-    - name: switches_outer
+    - name: _case_top
+      extrude: 3
+    - name: board
       extrude: 0.8
       operation: subtract
-  bottom:
+    - name: switches_outer
+      extrude: 0.8 + 0.9
+      operation: subtract
+
+  _bottom_wall:
+    - name: _case_board
+      extrude: bottom_height + socket_height + 0.5 * pcb_height
     - name: board
-      extrude: 2
+      extrude: bottom_height + socket_height + 0.5 * pcb_height
+      operation: subtract
+  _case_mountings:
+    - name: _case_mountings_outer
+      extrude: bottom_height + socket_height
+    - name: _case_mountings_inner
+      shift: [0, 0, bottom_height + socket_height - standoff_height]
+      extrude: standoff_height
+      operation: subtract
+  bottom:
+    - name: _case_board
+      extrude: bottom_height
+    - name: _bottom_wall
+      what: case
+    - name: _case_mountings_inner
+      extrude: bottom_height
+      operation: subtract
+    - name: _case_mountings
+      what: case
+
 pcbs:
   board_topplate:
     outlines:
@@ -304,6 +379,9 @@ pcbs:
     outlines:
       main:
         outline: board
+      # mcu:
+      #   outline: board_mcu
+      #   layer: F.SilkS
     footprints:
       choc_hotswap_matrix:
         what: infused-kim/choc
@@ -337,14 +415,27 @@ pcbs:
       diode:
         what: infused-kim/diode
         where:
-        - -/helper.*/
+        - -/_helper_.*/
         params:
           include_tht: true
           from: "{{colrow}}"
           to: "{{row_net}}"
         adjust:
-          shift: [1, -7]
+          shift: [1, -5]
           rotate: 180
+      key_vias:
+        what: via
+        where:
+        - /matrix_ring_.*/
+        - /matrix_middle_.*/
+        - /matrix_index_.*/
+        - /matrix_inner_.*/
+        - matrix_pinky_top
+        - /thumbfan_.*/
+        adjust:
+          shift: [0, 8.5]
+        params:
+          net: "{{column_net}}"
       mcu:
         what: infused-kim/nice_nano_pretty
         where:
@@ -395,18 +486,37 @@ pcbs:
         where:
           ref:
           - _helper_mcu_middle
-          shift: [0, -0.5 mcu_height - 3]
+          shift: [0, -0.5 mcu_height - 4]
         params:
           reverse: true
           jumpers_at_bottom: true
+
       reset:
         what: infused-kim/switch_reset
         where:
           ref:
           - _helper_topright
-          shift: [-1.5, -mcu_height - 4]
+          shift: [-1.8, -mcu_height - 4.5]
+
         params:
           reverse: true
+      reset_via_gnd:
+        what: via
+        where:
+          ref:
+          - _helper_topright
+          shift: [-2.525, -mcu_height - 4.5]
+        params:
+          net: "GND"
+      reset_via_rst:
+        what: via
+        where:
+          ref:
+          - _helper_topright
+          shift: [-1.075, -mcu_height - 4.5]
+        params:
+          net: "RST"
+
       power:
         what: infused-kim/switch_power
         where:
@@ -418,16 +528,43 @@ pcbs:
           from: BAT+
           to: RAW
 
-      jstph:
+      jstph_l:
         what: jstph
         where:
           ref:
           - _helper_topright
-          shift: [-7.5, -mcu_height - 12]
+          shift: [-7.5, -mcu_height - 13.6]
           rotate: -90
         params:
           neg: "GND"
           pos: "BAT+"
+      jstph_r:
+        what: jstph
+        where:
+          ref:
+          - _helper_topright
+          shift: [-7.5, -mcu_height - 13.6]
+          rotate: -90
+        params:
+          side: "B"
+          neg: "GND"
+          pos: "BAT+"
+      icon_bat_l:
+        what: infused-kim/icon_bat
+        where:
+          ref:
+          - _helper_topright
+          shift: [-15, -mcu_height - 13.6]
+          rotate: -90
+      icon_bat_r:
+        what: infused-kim/icon_bat
+        where:
+          ref:
+          - _helper_topright
+          shift: [-15, -mcu_height - 13.6]
+          rotate: 90
+        params:
+          side: "B"
 
       mounting_holes:
         what: infused-kim/mounting_hole
