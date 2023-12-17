@@ -1,8 +1,10 @@
 meta:
-  version: v0.1
+  version: 0.1
+  name: korne
+  author: XuyuanPang
 
 units:
-  kx: U # MX-spaced columns
+  kx: u # MX-spaced columns
   ky: cy # choc-spaced rows
 
   pd: 2
@@ -19,7 +21,9 @@ units:
   standoff_height: 3
   socket_height: 2
   magnet_slot_radius: 3
-
+  magnet_slot_depth: 1.5
+  rubber_radius: 4
+  rubber_height: 1.25
   m2r: 1.05 # radius of m2 screw
   screw_hole_size: m2r # screw hole size
 
@@ -334,13 +338,7 @@ outlines:
   _case_magnet_slots:
     - what: circle
       where:
-      - ref: matrix_pinky_top
-        shift: [0, -0.25 ky]
-      radius: magnet_slot_radius
-    - what: circle
-      where:
-      - ref: matrix_pinky_bottom
-        shift: [0, 0.25 ky]
+      - ref: matrix_pinky_home
       radius: magnet_slot_radius
     - what: circle
       where:
@@ -363,47 +361,111 @@ outlines:
           shift: [kx, -ky]
       radius: magnet_slot_radius
 
+  _case_rubbers:
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: matrix_pinky_top
+        shift: [0.6, 0.5 py - rubber_radius - 1]
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: matrix_pinky_top
+        shift: [-0.5 px + rubber_radius + 1, -0.6]
+
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: matrix_pinky_bottom
+        shift: [0.6, -(0.5 py - rubber_radius - 1)]
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: matrix_pinky_bottom
+        shift: [-0.5 px + rubber_radius + 1, 0.6]
+
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: _helper_topright
+        shift: [-2 * rubber_radius - 2, -rubber_radius - 0.6]
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: _helper_topright
+        shift: [-rubber_radius - 0.6, -2 * rubber_radius - 2]
+
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: thumbfan_far_thumb
+        shift: [-0.75 kx, -0.5 ky]
+        rotate: -60
+      - shift: [1.5, 2.5 rubber_radius + 0.7 ]
+
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: thumbfan_far_thumb
+        shift: [-0.75 kx, -0.5 ky]
+        rotate: -60
+      - shift: [-5.8, 2.5 rubber_radius - 2]
+
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: matrix_middle_top
+        shift: [-rubber_radius, rubber_radius]
+    - what: circle
+      radius: rubber_radius
+      where:
+      - ref: matrix_middle_top
+        shift: [rubber_radius, rubber_radius]
+
 cases:
   top:
     - name: _case_top
       extrude: 3
     - name: board
-      extrude: 0.8
+      extrude: 0.5 * pcb_height
       operation: subtract
     - name: switches_outer
       extrude: 0.8 + 0.9
       operation: subtract
 
+  _bottom_base:
+    - name: _case_board
+      extrude: bottom_height
   _bottom_wall:
     - name: _case_board
       extrude: bottom_height + socket_height + 0.5 * pcb_height
     - name: board
       extrude: bottom_height + socket_height + 0.5 * pcb_height
       operation: subtract
-  _case_mountings:
+  _standoffs:
     - name: _case_mountings_outer
       extrude: bottom_height + socket_height
     - name: _case_mountings_inner
       shift: [0, 0, bottom_height + socket_height - standoff_height]
       extrude: standoff_height
       operation: subtract
-  _magnet_slots:
-    - name: _case_magnet_slots
-      extrude: 1.5
-      shift: [0, 0, 0.5]
-  bottom:
-    - name: _case_board
-      extrude: bottom_height
-    - name: _bottom_wall
-      what: case
+  _standoffs_inner:
     - name: _case_mountings_inner
       extrude: bottom_height
-      operation: subtract
-    - name: _case_mountings
-      what: case
-    - name: _magnet_slots
-      what: case
-      operation: subtract
+  _magnet_slots:
+    - name: _case_magnet_slots
+      extrude: magnet_slot_depth
+      shift: [0, 0, 0.5]
+  _rubbers:
+    - name: _case_rubbers
+      extrude: rubber_height
+  bottom:
+    - _bottom_base
+    - _bottom_wall
+    - -_standoffs_inner
+    - _standoffs
+    - -_magnet_slots
+    - -_rubbers
 
 pcbs:
   board_topplate:
@@ -418,9 +480,6 @@ pcbs:
     outlines:
       main:
         outline: board
-      # mcu:
-      #   outline: board_mcu
-      #   layer: F.SilkS
     footprints:
       choc_hotswap_matrix:
         what: infused-kim/choc
@@ -567,7 +626,7 @@ pcbs:
           from: BAT+
           to: RAW
 
-      jstph_l:
+      jstph:
         what: jstph
         where:
           ref:
@@ -575,17 +634,6 @@ pcbs:
           shift: [-7.5, -mcu_height - 13.6]
           rotate: -90
         params:
-          neg: "GND"
-          pos: "BAT+"
-      jstph_r:
-        what: jstph
-        where:
-          ref:
-          - _helper_topright
-          shift: [-7.5, -mcu_height - 13.6]
-          rotate: -90
-        params:
-          side: "B"
           neg: "GND"
           pos: "BAT+"
       icon_bat_l:
@@ -625,7 +673,7 @@ pcbs:
           - matrix_pinky_bottom
           shift: [0.6 kx, -2]
         params:
-          text: "mycorne\\nby Xuyuan Pang"
+          text: "korne v0.1\\nby Xuyuan Pang"
           justify: left
       info_r:
         what: text
@@ -635,5 +683,5 @@ pcbs:
           shift: [0.6 kx, -2]
         params:
           layer: B.SilkS
-          text: "mycorne\\nby Xuyuan Pang"
+          text: "korne v0.1\\nby Xuyuan Pang"
           justify: right mirror
