@@ -1,0 +1,5 @@
+﻿Designator,Footprint,Quantity,Value,LCSC Part #
+"H1, H2, H3, H4, H5, H6, H7",mounting_hole,7,,
+JST1,JST_PH_S2B-PH-K_02x2.00mm_Angled,1,,
+SW1,sw_reset_side,1,,
+SW2,power_switch,1,,
