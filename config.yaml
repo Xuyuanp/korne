@@ -17,7 +17,7 @@ units:
   mcu_height: 33
 
   pcb_height: 1.6
-  bottom_height: 1.8
+  bottom_height: 2
   standoff_height: 3
   socket_height: 2
   magnet_slot_radius: 3
@@ -455,7 +455,7 @@ cases:
   _magnet_slots:
     - name: _case_magnet_slots
       extrude: magnet_slot_depth
-      shift: [0, 0, 0.5]
+      shift: [0, 0, 0.85]
   _rubbers:
     - name: _case_rubbers
       extrude: rubber_height
