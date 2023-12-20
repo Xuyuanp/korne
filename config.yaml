@@ -4,7 +4,7 @@ meta:
   author: XuyuanPang
 
 units:
-  kx: u # MX-spaced columns
+  kx: cx # MX-spaced columns
   ky: cy # choc-spaced rows
 
   pd: 2
@@ -28,11 +28,14 @@ units:
   screw_hole_size: m2r # screw hole size
 
 points:
+  key:
+    width: cx
+    height: cy
   zones:
     matrix:
       key:
         padding: ky
-        spread: kx
+        spread: u
       columns:
         pinky:
           key.column_net: col_pinky
@@ -57,27 +60,36 @@ points:
           row_net: row_top
     thumbfan:
       anchor:
-        ref: matrix_middle_bottom
-        shift: [0.5 kx, -1.6 ky]
-      key:
-        padding: ky
-        spread: kx
+        ref: matrix_inner_bottom
+        orient: 60
+        shift: [0, -2.3ky]
       columns:
-        near:
-          key.column_net: col_middle
-        home:
-          key:
-            splay: -15
-            origin: [-0.5 kx, -1 ky]
-            column_net: col_index
+        _mcu_bottom_right:
+          key.skip: true
         far:
           key:
-            splay: -15
-            origin: [-0.5 kx, -1 ky]
-            rotate: 90
+            spread: -0.75kx
             width: 1.5 kx
-            shift: [0, 0.25 kx]
+            shift: [0, 0.5 ky]
             column_net: col_inner
+        _home_far_bridge:
+          key:
+            spread: -0.25kx
+            splay: -90
+            shift: [-1.5 kx, 0]
+            skip: true
+        home:
+          key:
+            spread: -1.5 kx
+            splay: 15
+            origin: [0.5 kx, -ky]
+            column_net: col_index
+        near:
+          key:
+            spread: -kx
+            splay: 15
+            origin: [0.5 kx, -ky]
+            column_net: col_middle
       rows:
         thumb:
           row_net: row_thumb
@@ -96,18 +108,46 @@ points:
           - ref: matrix_inner_top
             shift: [0.5 kx, 0.5 py]
           - ref: _helper_topright
+    _helper_mcu_bottomleft:
+      anchor:
+        - ref: matrix_inner_bottom
+          shift: [0.5 kx, -0.5 kx / 1.732]
+          rotate: -30
+    _helper_mcu_bottomright:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [0.75 kx, -0.5 py]
+
     _helper_screw_holes_topleft:
       anchor:
-        - ref: matrix_pinky_top
-          shift: [0.5 kx, -0.5 ky]
+        - aggregate.parts:
+          - ref: matrix_pinky_top
+          - ref: matrix_ring_top
+          affect: "x"
+        - aggregate.parts:
+          - ref: matrix_pinky_top
+          - ref: matrix_pinky_home
+          affect: "y"
     _helper_screw_holes_bottomleft:
       anchor:
-        - ref: matrix_pinky_bottom
-          shift: [0.5 kx, 0.5 ky]
+        - aggregate.parts:
+          - ref: matrix_pinky_home
+          - ref: matrix_ring_home
+          affect: "x"
+        - aggregate.parts:
+          - ref: matrix_pinky_home
+          - ref: matrix_pinky_bottom
+          affect: "y"
     _helper_screw_holes_topright:
       anchor:
-        - ref: matrix_index_top
-          shift: [0.5 kx, -0.5 ky]
+        - aggregate.parts:
+          - ref: matrix_index_top
+          - ref: matrix_inner_top
+          affect: "x"
+        - aggregate.parts:
+          - ref: matrix_index_top
+          - ref: matrix_index_home
+          affect: "y"
     _helper_screw_holes_palm:
       anchor:
         - ref: matrix_middle_bottom
@@ -115,15 +155,18 @@ points:
     _helper_screw_holes_thumb:
       anchor:
         - ref: thumbfan_far_thumb
-          shift: [0, 0.5 py + 2]
+          shift: [4, 3 + 0.5 kx]
+
     _helper_mcu_cover_holes_low:
       anchor:
         - ref: thumbfan_far_thumb
-          shift: [0.25 kx + 0.5 * px + 3, -0.18 ky]
+          shift: [0.75 kx, -0.5 ky]
+          rotate: -90
+        - shift: [-5, 3.5]
     _helper_mcu_cover_holes_high:
       anchor:
-        - ref: _helper_mcu_cover_holes_low
-          shift: [0, 1.05 py]
+        - ref: _helper_mcu_bottomleft
+          shift: [2.5, 3.5]
 
 templates:
   board_matrix:
@@ -175,8 +218,12 @@ templates:
       - ref: matrix_inner_top
         shift: [0.5 kx, 0.5 (ky + _padding)] # X axis shift 0.5kx to avoid overlap
 
-      - ref: matrix_pinky_bottom
-        shift: [4.5 kx, -0.5 (ky + _padding)]
+      - - ref: matrix_inner_bottom
+          shift: [0.5 kx, 0]
+          affect: "x"
+        - ref: matrix_pinky_bottom
+          shift: [0, -0.5 (ky + _padding)]
+          affect: "y"
 
       - ref: matrix_pinky_bottom
         shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
@@ -202,31 +249,21 @@ templates:
       - ref: thumbfan_near_thumb
         shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
 
-  _board_mcu_v:
+  board_mcu:
     $params: [_padding]
     what: polygon
     points:
+      - ref: _helper_mcu_bottomleft
+      - ref: thumbfan_far_thumb
+        shift: [0.75kx, -0.5 (ky + _padding)]
+      - - ref: thumbfan_far_thumb
+          shift: [0.75kx, -0.5 (ky + _padding)]
+          affect: "x"
+        - ref: matrix_inner_top
+          shift: [0.5 kx, 0.5 (ky + _padding)]
+          affect: "y"
       - ref: matrix_inner_top
         shift: [0.5 kx, 0.5 (ky + _padding)]
-      - ref: _helper_topright
-        shift: [0.5 * (_padding - pd), 0.5 * (_padding - pd)]
-      - ref: _helper_topright
-        shift: [0.5 * (_padding - pd), 0.5 * (_padding - pd) - 5 * (ky + _padding)]
-      - ref: matrix_inner_top
-        shift: [0.5 kx, -5 (ky + _padding)]
-
-  _board_mcu_h:
-    $params: [_padding]
-    what: polygon
-    points:
-      - ref: thumbfan_far_thumb
-        shift: [0.75 kx, -0.5 (ky + _padding)]
-      - ref: _helper_topright
-        shift: [0.5 * (_padding - pd), 0.5 * (_padding - pd)]
-      - ref: _helper_topright
-        shift: [0.5 * (_padding - pd) -3 kx, 0.5 * (_padding - pd)]
-      - ref: thumbfan_far_thumb
-        shift: [0.75 kx, 3 (ky + _padding)]
 
 outlines:
   raw:
@@ -259,11 +296,8 @@ outlines:
     - $extends: templates.board_thumbfan
       $args: [pd]
   board_mcu:
-    - $extends: templates._board_mcu_v
+    - $extends: templates.board_mcu
       $args: [pd]
-    - $extends: templates._board_mcu_h
-      $args: [pd]
-      operation: intersect
   screw_holes:
   - what: circle
     where:
@@ -306,11 +340,8 @@ outlines:
     - $extends: templates.board_thumbfan
       $args: [cpd]
   _case_mcu:
-    - $extends: templates._board_mcu_v
+    - $extends: templates.board_mcu
       $args: [cpd]
-    - $extends: templates._board_mcu_h
-      $args: [cpd]
-      operation: intersect
 
   _case_keywell:
     - _case_matrix
@@ -465,7 +496,7 @@ cases:
     - -_standoffs_inner
     - _standoffs
     - -_magnet_slots
-    - -_rubbers
+    # - -_rubbers
 
 pcbs:
   board_topplate:
@@ -480,6 +511,9 @@ pcbs:
     outlines:
       main:
         outline: board
+      mcu:
+        outline: board_mcu
+        layer: F.SilkS
     footprints:
       choc_hotswap_matrix:
         what: infused-kim/choc
