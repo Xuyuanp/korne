@@ -742,7 +742,12 @@ pcbs:
       jlc_marker:
         what: text
         where:
-          ref: thumbfan_near_thumb
-          shift: [0, 0.6 ky]
+          - aggregate.parts:
+              - ref: matrix_index_bottom
+              - ref: thumbfan_near_thumb
+            affect: "y"
+          - ref: thumbfan_near_thumb
+            shift: [0.5 kx, 0]
+            affect: "x"
         params:
           text: "JLCJLCJLCJLC"
