@@ -4,14 +4,16 @@ meta:
   author: XuyuanPang
 
 units:
-  kx: cx # MX-spaced columns
-  ky: cy # choc-spaced rows
+  kx: cx
+  ky: cy
 
   pd: 2
   px: kx + pd
   py: ky + pd
 
   cpd: 4
+
+  thumb_shift: 1.6 ky
 
   mcu_width: 17.78
   mcu_height: 33
@@ -29,28 +31,28 @@ units:
 
 points:
   key:
-    width: cx
-    height: cy
+    width: kx
+    height: ky
   zones:
     matrix:
       key:
         padding: ky
         spread: u
       columns:
-        pinky:
-          key.column_net: col_pinky
-        ring:
-          key.stagger: 0.65 ky
-          key.column_net: col_ring
-        middle:
-          key.stagger: 0.25 ky
-          key.column_net: col_middle
-        index:
-          key.stagger: -0.35 ky
-          key.column_net: col_index
-        inner:
-          key.stagger: -0.2 ky
-          key.column_net: col_inner
+        pinky.key:
+          column_net: col_pinky
+        ring.key:
+          stagger: 0.65 ky
+          column_net: col_ring
+        middle.key:
+          stagger: 0.25 ky
+          column_net: col_middle
+        index.key:
+          stagger: -0.35 ky
+          column_net: col_index
+        inner.key:
+          stagger: -0.2 ky
+          column_net: col_inner
       rows:
         bottom:
           row_net: row_bottom
@@ -60,39 +62,32 @@ points:
           row_net: row_top
     thumbfan:
       anchor:
-        ref: matrix_inner_bottom
-        orient: 60
-        shift: [0, -2.3ky]
+        - ref: matrix_inner_bottom
+          shift: [0.5 kx, -0.5 ky / 1.732]
+          rotate: -30
+        - shift: [thumb_shift, 0]
+          rotate: 90
+        - shift: [-0.75 kx, 0.5 ky]
+      key:
+        spread: -kx
       columns:
-        _mcu_bottom_right:
-          key.skip: true
-        far:
-          key:
-            spread: -0.75kx
-            width: 1.5 kx
-            shift: [0, 0.5 ky]
-            column_net: col_inner
-        _home_far_bridge:
-          key:
-            spread: -0.25kx
-            splay: -90
-            shift: [-1.5 kx, 0]
-            skip: true
-        home:
-          key:
-            spread: -1.5 kx
-            splay: 15
-            origin: [0.5 kx, -ky]
-            column_net: col_index
-        near:
-          key:
-            spread: -kx
-            splay: 15
-            origin: [0.5 kx, -ky]
-            column_net: col_middle
+        far.key:
+          width: 1.5 kx
+          column_net: col_inner
+        _bridge_far_home.key:
+          spread: -0.25 kx - 0.5 (kx - ky)
+          splay: -90
+          skip: true
+        home.key:
+          splay: 15
+          origin: [0.5 kx, -0.5 ky]
+          column_net: col_index
+        near.key:
+          splay: 15
+          origin: [0.5 kx, -0.5 ky]
+          column_net: col_middle
       rows:
-        thumb:
-          row_net: row_thumb
+        thumb.row_net: row_thumb
 
     _helper_topright:
       anchor:
@@ -100,23 +95,34 @@ points:
           shift: [0, 0.5 py]
           affect: "y"
         - ref: thumbfan_far_thumb
-          shift: [0.75 kx, -0.5 py]
+          shift: [0.75 kx, -0.5 ky]
+          affect: "x"
+
+    # helpers to draw mcu area
+    _helper_mcu_topleft:
+      anchor:
+        - ref: matrix_inner_top
+          shift: [0.5 kx, 0.5 py]
+    _helper_mcu_bottomright:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [0.75 kx, -0.5 ky]
+          rotate: -90
+    _helper_mcu_bottomleft:
+      anchor:
+        - ref: _helper_mcu_bottomright
+          shift: [-thumb_shift, 0]
+    _helper_mcu_topright:
+      anchor:
+        - ref: _helper_mcu_topleft
+          affect: "y"
+        - ref: _helper_mcu_bottomright
           affect: "x"
     _helper_mcu_middle:
       anchor:
         - aggregate.parts:
-          - ref: matrix_inner_top
-            shift: [0.5 kx, 0.5 py]
-          - ref: _helper_topright
-    _helper_mcu_bottomleft:
-      anchor:
-        - ref: matrix_inner_bottom
-          shift: [0.5 kx, -0.5 kx / 1.732]
-          rotate: -30
-    _helper_mcu_bottomright:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [0.75 kx, -0.5 py]
+          - ref: _helper_mcu_topleft
+          - ref: _helper_mcu_topright
 
     _helper_screw_holes_topleft:
       anchor:
@@ -232,7 +238,7 @@ templates:
     $params: [_padding]
     what: polygon
     points:
-      - ref: matrix_ring_bottom
+      - ref: matrix_pinky_home
 
       - ref: thumbfan_far_thumb
         shift: [0.75 kx, 2 (ky + _padding)]
@@ -294,10 +300,17 @@ outlines:
       $args: [pd]
   board_thumbfan:
     - $extends: templates.board_thumbfan
-      $args: [pd]
+      $args: [0]
   board_mcu:
-    - $extends: templates.board_mcu
-      $args: [pd]
+    - what: polygon
+      points:
+      - _helper_mcu_bottomleft
+      - _helper_mcu_bottomright
+      - _helper_mcu_topright
+      - _helper_mcu_topleft
+
+    # - $extends: templates.board_mcu
+    #   $args: [0]
   screw_holes:
   - what: circle
     where:
@@ -594,11 +607,11 @@ pcbs:
           RST_label: 'RST'
           VCC_label: 'VCC'
           P21_label: 'P21'
-          P20_label: 'P20'
-          P19_label: 'P19'
-          P18_label: 'P18'
-          P15_label: 'P15'
-          P14_label: 'P14'
+          P20_label: 'C0'
+          P19_label: 'C1'
+          P18_label: 'C2'
+          P15_label: 'C3'
+          P14_label: 'C4'
           P16_label: 'P16'
           P10_label: 'P10'
 
@@ -606,10 +619,10 @@ pcbs:
           P0_label: 'P0'
           P2_label: 'P2'
           P3_label: 'P3'
-          P4_label: 'P4'
-          P5_label: 'P5'
-          P6_label: 'P6'
-          P7_label: 'P7'
+          P4_label: 'R0'
+          P5_label: 'R1'
+          P6_label: 'R2'
+          P7_label: 'R3'
           P8_label: 'P8'
           P9_label: 'P9'
 
@@ -628,7 +641,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.8, -mcu_height - 4.5]
+          shift: [-1.7, -mcu_height - 5.5]
 
         params:
           reverse: true
@@ -637,7 +650,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-2.525, -mcu_height - 4.5]
+          shift: [-2.425, -mcu_height - 5.5]
         params:
           net: "GND"
       reset_via_rst:
@@ -645,7 +658,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.075, -mcu_height - 4.5]
+          shift: [-0.975, -mcu_height - 5.5]
         params:
           net: "RST"
 
@@ -654,18 +667,36 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.75, -mcu_height - 13]
+          shift: [-1.75, -mcu_height - 15]
         params:
           reverse: true
           from: BAT+
           to: RAW
+      power_on_r:
+        what: infused-kim/text
+        where:
+          ref:
+          - _helper_topright
+          shift: [-1.75, -mcu_height - 9.5]
+        params:
+          reverse: true
+          text: "ON"
+      power_off_r:
+        what: infused-kim/text
+        where:
+          ref:
+          - _helper_topright
+          shift: [-1.75, -mcu_height - 20.5]
+        params:
+          reverse: true
+          text: "OFF"
 
       jstph:
         what: jstph
         where:
           ref:
           - _helper_topright
-          shift: [-7.5, -mcu_height - 13.6]
+          shift: [-7.0, -mcu_height - 15]
           rotate: -90
         params:
           neg: "GND"
@@ -675,14 +706,14 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-15, -mcu_height - 13.6]
+          shift: [-15, -mcu_height - 15]
           rotate: -90
       icon_bat_r:
         what: infused-kim/icon_bat
         where:
           ref:
           - _helper_topright
-          shift: [-15, -mcu_height - 13.6]
+          shift: [-15, -mcu_height - 15]
           rotate: 90
         params:
           side: "B"
