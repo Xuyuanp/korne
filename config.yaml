@@ -127,11 +127,13 @@ points:
     _helper_mcu_cover_holes_low:
       anchor:
         - ref: _helper_mcu_bottomright
-        - shift: [-6, 3.5]
+          rotate: 60
+        - shift: [0, 3 * 2]
     _helper_mcu_cover_holes_high:
       anchor:
         - ref: _helper_mcu_bottomleft
-          shift: [2.5, 3.5]
+          rotate: -30
+        - shift: [0, 1.73205081 * 2]
 
     _helper_screw_holes_topleft:
       anchor:
