@@ -124,6 +124,15 @@ points:
           - ref: _helper_mcu_topleft
           - ref: _helper_mcu_topright
 
+    _helper_mcu_cover_holes_low:
+      anchor:
+        - ref: _helper_mcu_bottomright
+        - shift: [-6, 3.5]
+    _helper_mcu_cover_holes_high:
+      anchor:
+        - ref: _helper_mcu_bottomleft
+          shift: [2.5, 3.5]
+
     _helper_screw_holes_topleft:
       anchor:
         - aggregate.parts:
@@ -161,18 +170,7 @@ points:
     _helper_screw_holes_thumb:
       anchor:
         - ref: thumbfan_far_thumb
-          shift: [4, 3 + 0.5 kx]
-
-    _helper_mcu_cover_holes_low:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [0.75 kx, -0.5 ky]
-          rotate: -90
-        - shift: [-5, 3.5]
-    _helper_mcu_cover_holes_high:
-      anchor:
-        - ref: _helper_mcu_bottomleft
-          shift: [2.5, 3.5]
+          shift: [5, 3 + 0.5 kx]
 
 templates:
   board_matrix:
@@ -558,7 +556,7 @@ pcbs:
           to: "{{column_net}}"
           keycaps_x: 1.5 kx
       diode:
-        what: infused-kim/diode
+        what: diode
         where:
         - -/_helper_.*/
         params:
@@ -602,29 +600,19 @@ pcbs:
           P2: MOSI
           P3: SCK
 
-          RAW_label: 'RAW'
-          GND_label: 'GND'
-          RST_label: 'RST'
-          VCC_label: 'VCC'
-          P21_label: 'P21'
           P20_label: 'C0'
           P19_label: 'C1'
           P18_label: 'C2'
           P15_label: 'C3'
           P14_label: 'C4'
-          P16_label: 'P16'
-          P10_label: 'P10'
 
-          P1_label: 'P1'
-          P0_label: 'P0'
-          P2_label: 'P2'
-          P3_label: 'P3'
+          P1_label: 'CS'
+          P2_label: 'SDA'
+          P3_label: 'SCL'
           P4_label: 'R0'
           P5_label: 'R1'
           P6_label: 'R2'
           P7_label: 'R3'
-          P8_label: 'P8'
-          P9_label: 'P9'
 
       niceview:
         what: infused-kim/nice_view
@@ -750,3 +738,11 @@ pcbs:
           layer: B.SilkS
           text: "korne v0.1\\nby Xuyuan Pang"
           justify: right mirror
+
+      jlc_marker:
+        what: text
+        where:
+          ref: thumbfan_near_thumb
+          shift: [0, 0.6 ky]
+        params:
+          text: "JLCJLCJLCJLC"
