@@ -24,6 +24,7 @@ units:
   bottom_wall_adjust: 0.1
   usbc_notch_radius: 3
   usbc_notch_width: 10
+  support_radius: 2
   switch_height: 2.2
   plate_height: 1.3
   standoff_height: 3 + 0.2
@@ -510,6 +511,44 @@ outlines:
       - ref: matrix_middle_top
         shift: [rubber_radius, rubber_radius]
 
+  _pcb_supports:
+    - what: circle
+      where:
+        - ref: _helper_mcu_bottomright
+      radius: support_radius
+    - what: circle
+      where:
+        - ref: _helper_mcu_topright
+      radius: support_radius
+    - what: circle
+      where:
+        - ref: thumbfan_far_thumb
+          shift: [-0.75 kx, -0.5 ky]
+      radius: support_radius
+    - what: circle
+      where:
+        - ref: thumbfan_near_thumb
+          shift: [-0.5 kx, -0.5 ky]
+      radius: support_radius
+    - what: circle
+      where:
+        - ref: matrix_pinky_bottom
+          shift: [-0.5 kx, -0.5 py]
+      radius: support_radius
+    - what: circle
+      where:
+        - ref: matrix_pinky_top
+          shift: [-0.5 kx, 0.5 py]
+      radius: support_radius
+    - what: rectangle
+      where:
+        - ref: matrix_middle_top
+          shift: [0, 0.5 py]
+      size: [py + 2, 1]
+  _case_pcb_supports:
+    - _case_bottom_outer
+    - ~_pcb_supports
+
 cases:
   top:
     - name: topplate_fr4
@@ -557,9 +596,14 @@ cases:
       rotate: [-90, 0, 0]
       shift: [0, 0, bottom_height + socket_height + pcb_height + 3]
 
+  _pcb_supports:
+    - name: _case_pcb_supports
+      extrude: bottom_height + socket_height
+
   bottom:
     - _bottom_base
     - _bottom_wall
+    - _pcb_supports
     - -_standoffs_inner
     - _standoffs
     - -_magnet_slots
@@ -590,6 +634,9 @@ pcbs:
       #   layer: F.SilkS
       # notch:
       #   outline: _case_sw_notch
+      #   layer: F.SilkS
+      # supports:
+      #   outline: _case_pcb_supports
       #   layer: F.SilkS
     footprints:
       choc_hotswap_matrix:
