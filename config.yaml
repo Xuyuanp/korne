@@ -452,35 +452,20 @@ outlines:
   _pcb_supports:
     - what: circle
       where:
-        - ref: _helper_mcu_bottomright
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: _helper_mcu_topright
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: _helper_thumbfan_bottom
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: _helper_thumbfan_bottomleft
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: _helper_matrix_bottomleft
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: _helper_matrix_topleft
+        - _helper_matrix_bottomleft
+        - _helper_matrix_topleft
+        - _helper_thumbfan_bottomleft
+        - _helper_thumbfan_bottom
+        - _helper_mcu_topright
+        - _helper_mcu_bottomright
       radius: support_radius
     - what: rectangle
       where:
         - ref: matrix_middle_top
-          shift: [0, 0.5 py]
+          shift: [0, 0.5 ky]
       size: [py + 2, 1]
   _case_pcb_supports:
-    - _case_bottom_outer
+    - _case_bottom_inner
     - ~_pcb_supports
 
 cases:
