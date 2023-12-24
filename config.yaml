@@ -99,7 +99,7 @@ points:
     _helper_topright:
       anchor:
         - ref: matrix_inner_top
-          shift: [0, 0.5 py]
+          shift: [0, 0.5 ky]
           affect: "y"
         - ref: thumbfan_far_thumb
           shift: [0.75 kx, -0.5 ky]
@@ -109,7 +109,7 @@ points:
     _helper_mcu_topleft:
       anchor:
         - ref: matrix_inner_top
-          shift: [0.5 kx, 0.5 py]
+          shift: [0.5 kx, 0.5 ky]
     _helper_mcu_bottomright:
       anchor:
         - ref: thumbfan_far_thumb
@@ -154,7 +154,7 @@ points:
     _helper_matrix_topleft:
       anchor:
         - ref: matrix_pinky_top
-          shift: [-0.5 px, 0.5 py]
+          shift: [-0.5 px, 0.5 ky]
     _helper_matrix_bottomleft:
       anchor:
         - ref: matrix_pinky_bottom
@@ -225,66 +225,6 @@ points:
         - ref: matrix_middle_top
           shift: [0, 5.5]
 
-templates:
-  board_matrix:
-    $params: [_padding]
-    what: polygon
-    points:
-      - ref: matrix_pinky_top
-        shift: [-0.5 (kx + _padding), 0.5 (ky + _padding)]
-
-      - - ref: matrix_ring_top
-          shift: [-0.5 (kx + _padding), 0]
-          affect: "x"
-        - ref: matrix_pinky_top
-          shift: [0, 0.5 (ky + _padding)]
-          affect: "y"
-
-      - ref: matrix_ring_top
-        shift: [-0.5 (kx + _padding), 0.5 (ky + _padding)]
-
-      - - ref: matrix_middle_top
-          shift: [-0.5 (kx + _padding), 0]
-          affect: "x"
-        - ref: matrix_ring_top
-          shift: [0, 0.5 (ky + _padding)]
-          affect: "y"
-
-      - ref: matrix_middle_top
-        shift: [-0.5 (kx + _padding), 0.5 (ky + _padding)]
-      - ref: matrix_middle_top
-        shift: [0.5 (kx + _padding), 0.5 (ky + _padding)]
-
-      - - ref: matrix_middle_top
-          shift: [0.5 (kx + _padding), 0]
-          affect: "x"
-        - ref: matrix_index_top
-          shift: [0, 0.5 (ky + _padding)]
-          affect: "y"
-
-      - ref: matrix_index_top
-        shift: [0.5 (kx + _padding), 0.5 (ky + _padding)]
-
-      - - ref: matrix_index_top
-          shift: [0.5 (kx + _padding), 0]
-          affect: "x"
-        - ref: matrix_inner_top
-          shift: [0, 0.5 (ky + _padding)]
-          affect: "y"
-
-      - ref: matrix_inner_top
-        shift: [0.5 kx, 0.5 (ky + _padding)] # X axis shift 0.5kx to avoid overlap
-
-      - - ref: matrix_inner_bottom
-          shift: [0.5 kx, 0]
-          affect: "x"
-        - ref: matrix_pinky_bottom
-          shift: [0, -0.5 ky]
-          affect: "y"
-
-      - ref: matrix_pinky_bottom
-        shift: [-0.5 (kx + _padding), -0.5 ky]
-
 outlines:
   raw:
     - what: rectangle
@@ -310,8 +250,63 @@ outlines:
       - -/_helper_.*/
       size: 15
   board_matrix:
-    - $extends: templates.board_matrix
-      $args: [pd]
+    - what: polygon
+      points:
+        - ref: matrix_pinky_top
+          shift: [-0.5 px, 0.5 ky]
+
+        - - ref: matrix_ring_top
+            shift: [-0.5 px, 0]
+            affect: "x"
+          - ref: matrix_pinky_top
+            shift: [0, 0.5 ky]
+            affect: "y"
+
+        - ref: matrix_ring_top
+          shift: [-0.5 px, 0.5 ky]
+
+        - - ref: matrix_middle_top
+            shift: [-0.5 px, 0]
+            affect: "x"
+          - ref: matrix_ring_top
+            shift: [0, 0.5 ky]
+            affect: "y"
+
+        - ref: matrix_middle_top
+          shift: [-0.5 px, 0.5 ky]
+        - ref: matrix_middle_top
+          shift: [0.5 px, 0.5 ky]
+
+        - - ref: matrix_middle_top
+            shift: [0.5 px, 0]
+            affect: "x"
+          - ref: matrix_index_top
+            shift: [0, 0.5 ky]
+            affect: "y"
+
+        - ref: matrix_index_top
+          shift: [0.5 px, 0.5 ky]
+
+        - - ref: matrix_index_top
+            shift: [0.5 px, 0]
+            affect: "x"
+          - ref: matrix_inner_top
+            shift: [0, 0.5 ky]
+            affect: "y"
+
+        - ref: matrix_inner_top
+          shift: [0.5 kx, 0.5 ky] # X axis shift 0.5kx to avoid overlap
+
+        - - ref: matrix_inner_bottom
+            shift: [0.5 kx, 0]
+            affect: "x"
+          - ref: matrix_pinky_bottom
+            shift: [0, -0.5 ky]
+            affect: "y"
+
+        - ref: matrix_pinky_bottom
+          shift: [-0.5 px, -0.5 ky]
+
   board_thumbfan:
     - what: polygon
       points:
@@ -395,7 +390,7 @@ outlines:
       where:
         - ref: _helper_mcu_bottomright
           rotate: 30
-        - shift: [0, 17.9]
+        - shift: [0, 16.3]
       size: 18
 
   _case_magnet_slots:
@@ -628,7 +623,7 @@ pcbs:
         - matrix_pinky_top
         - /^thumbfan_.*/
         adjust:
-          shift: [0, 8.5]
+          shift: [0, 8]
         params:
           net: "{{column_net}}"
       mcu:
@@ -717,7 +712,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.75, -mcu_height - 9.5]
+          shift: [-1.75, -mcu_height - 9.8]
         params:
           reverse: true
           text: "ON"
@@ -726,7 +721,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-1.75, -mcu_height - 20.5]
+          shift: [-1.75, -mcu_height - 20.2]
         params:
           reverse: true
           text: "OFF"
