@@ -387,7 +387,12 @@ outlines:
     - what: circle
       where:
       - /_helper_screw_holes_.*/
-      radius: 3
+      radius: 2.9
+  _case_mountings_outer_root:
+    - what: circle
+      where:
+      - /_helper_screw_holes_.*/
+      radius: 3.3
   _case_mountings_inner:
     - what: circle
       where:
@@ -425,7 +430,7 @@ outlines:
     - what: circle
       where:
         - ref: matrix_inner_bottom
-          shift: [kx, -ky]
+          shift: [1.2 kx, -ky]
       radius: magnet_slot_radius
 
   _case_usbc_notch:
@@ -516,6 +521,8 @@ cases:
   _standoffs:
     - name: _case_mountings_outer
       extrude: bottom_height + socket_height
+    - name: _case_mountings_outer_root
+      extrude: bottom_height + 1
     - name: _case_mountings_inner
       shift: [0, 0, bottom_height + socket_height - standoff_height]
       extrude: standoff_height
