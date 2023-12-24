@@ -19,13 +19,17 @@ units:
   mcu_height: 33
 
   pcb_height: 1.6
-  bottom_height: 2
-  standoff_height: 3
+  bottom_height: 2.5
+  bottom_wall_thickness: 1.5
+  bottom_wall_adjust: 0.1
+  switch_height: 2.2
+  plate_height: 1.3
+  standoff_height: 3 + 0.2
   socket_height: 2
-  magnet_slot_radius: 3
-  magnet_slot_depth: 1.5
-  rubber_radius: 4
-  rubber_height: 1.25
+  magnet_slot_radius: 3.05
+  magnet_slot_depth: 2
+  rubber_radius: 4.05
+  rubber_height: 1.4
   m2r: 1.05 # radius of m2 screw
   screw_hole_size: m2r # screw hole size
 
@@ -308,9 +312,6 @@ outlines:
       - _helper_mcu_bottomright
       - _helper_mcu_topright
       - _helper_mcu_topleft
-
-    # - $extends: templates.board_mcu
-    #   $args: [0]
   screw_holes:
   - what: circle
     where:
@@ -364,21 +365,41 @@ outlines:
     - _case_thumbfan
     - name: _case_mcu
       fillet: 1.5
+
   _case_top:
     - name: _case_keywell
       fillet: 1.5
     - -keywell_holes
 
+  _case_bottom_inner:
+    - name: board
+      expand: bottom_wall_adjust
+  _case_bottom_outer:
+    - name: board
+      expand: bottom_wall_thickness + bottom_wall_adjust
+  _case_bottom_wall:
+    - _case_bottom_outer
+    - -_case_bottom_inner
+
   _case_mountings_outer:
     - what: circle
       where:
       - /_helper_screw_holes_.*/
-      radius: 2.3
+      radius: 3
   _case_mountings_inner:
     - what: circle
       where:
       - /_helper_screw_holes_.*/
-      radius: 1.35
+      radius: 1.4
+
+  _case_sw_notch:
+    - what: rectangle
+      where:
+        - ref: _helper_mcu_bottomright
+          rotate: 30
+        - shift: [0, 17.9]
+      size: 18
+
   _case_magnet_slots:
     - what: circle
       where:
@@ -468,24 +489,12 @@ outlines:
 
 cases:
   top:
-    - name: _case_top
-      extrude: 3
-    - name: board
-      extrude: 0.5 * pcb_height
-      operation: subtract
+    - name: topplate_fr4
+      extrude: switch_height
     - name: switches_outer
-      extrude: 0.8 + 0.9
+      extrude: switch_height - plate_height
       operation: subtract
 
-  _bottom_base:
-    - name: _case_board
-      extrude: bottom_height
-  _bottom_wall:
-    - name: _case_board
-      extrude: bottom_height + socket_height + 0.5 * pcb_height
-    - name: board
-      extrude: bottom_height + socket_height + 0.5 * pcb_height
-      operation: subtract
   _standoffs:
     - name: _case_mountings_outer
       extrude: bottom_height + socket_height
@@ -499,17 +508,37 @@ cases:
   _magnet_slots:
     - name: _case_magnet_slots
       extrude: magnet_slot_depth
-      shift: [0, 0, 0.85]
+      shift: [0, 0, bottom_height - magnet_slot_depth]
   _rubbers:
     - name: _case_rubbers
       extrude: rubber_height
+
+  _bottom_base:
+    - name: _case_bottom_outer
+      extrude: bottom_height
+  _bottom_wall:
+    - name: _case_bottom_wall
+      extrude: bottom_height + socket_height + pcb_height + switch_height
+
+  _sw_notch:
+    - name: _case_sw_notch
+      extrude: 10
+      shift: [0, 0, bottom_height + socket_height + pcb_height]
+      rotate: [0,45, 0]
+
   bottom:
     - _bottom_base
     - _bottom_wall
     - -_standoffs_inner
     - _standoffs
     - -_magnet_slots
-    # - -_rubbers
+    - -_rubbers
+    - -_sw_notch
+
+  # for debugging
+  pcb:
+    - name: board
+      extrude: pcb_height
 
 pcbs:
   board_topplate:
@@ -524,9 +553,12 @@ pcbs:
     outlines:
       main:
         outline: board
-      mcu:
-        outline: board_mcu
-        layer: F.SilkS
+      # mcu:
+      #   outline: board_mcu
+      #   layer: F.SilkS
+      # notch:
+      #   outline: _case_sw_notch
+      #   layer: F.SilkS
     footprints:
       choc_hotswap_matrix:
         what: infused-kim/choc
