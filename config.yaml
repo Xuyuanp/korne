@@ -758,7 +758,7 @@ pcbs:
           - matrix_pinky_bottom
           shift: [0.6 kx, -2]
         params:
-          text: "korne v0.1\\nby Xuyuan Pang"
+          text: "korne v0.2\\nby Xuyuan Pang"
           justify: left
       info_r:
         what: text
@@ -768,7 +768,7 @@ pcbs:
           shift: [0.6 kx, -2]
         params:
           layer: B.SilkS
-          text: "korne v0.1\\nby Xuyuan Pang"
+          text: "korne v0.2\\nby Xuyuan Pang"
           justify: right mirror
 
       jlc_marker:
