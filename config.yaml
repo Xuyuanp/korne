@@ -142,6 +142,24 @@ points:
           rotate: -30
         - shift: [0, 1.73205081 * 2]
 
+    _helper_thumbfan_bottom:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [-0.75 kx, -0.5 ky]
+    _helper_thumbfan_bottomleft:
+      anchor:
+        - ref: thumbfan_near_thumb
+          shift: [-0.5 kx, -0.5 ky]
+
+    _helper_matrix_topleft:
+      anchor:
+        - ref: matrix_pinky_top
+          shift: [-0.5 px, 0.5 py]
+    _helper_matrix_bottomleft:
+      anchor:
+        - ref: matrix_pinky_bottom
+          shift: [-0.5 px, -0.5 ky]
+
     _helper_screw_holes_topleft:
       anchor:
         - aggregate.parts:
@@ -235,48 +253,11 @@ templates:
           shift: [0.5 kx, 0]
           affect: "x"
         - ref: matrix_pinky_bottom
-          shift: [0, -0.5 (ky + _padding)]
+          shift: [0, -0.5 ky]
           affect: "y"
 
       - ref: matrix_pinky_bottom
-        shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
-
-  board_thumbfan:
-    $params: [_padding]
-    what: polygon
-    points:
-      - ref: matrix_pinky_home
-
-      - ref: thumbfan_far_thumb
-        shift: [0.75 kx, 2 (ky + _padding)]
-
-      - ref: thumbfan_far_thumb
-        shift: [0.75 kx, -0.5 (ky + _padding)]
-
-      - ref: thumbfan_far_thumb
-        shift: [-0.25 kx - 0.5 (kx + _padding), -0.5 (ky + _padding)]
-
-      - ref: thumbfan_far_thumb
-        shift: [-0.25 kx - 0.5 (kx + _padding), 0.5 (ky + _padding)]
-
-      - ref: thumbfan_near_thumb
-        shift: [-0.5 (kx + _padding), -0.5 (ky + _padding)]
-
-  board_mcu:
-    $params: [_padding]
-    what: polygon
-    points:
-      - ref: _helper_mcu_bottomleft
-      - ref: thumbfan_far_thumb
-        shift: [0.75kx, -0.5 (ky + _padding)]
-      - - ref: thumbfan_far_thumb
-          shift: [0.75kx, -0.5 (ky + _padding)]
-          affect: "x"
-        - ref: matrix_inner_top
-          shift: [0.5 kx, 0.5 (ky + _padding)]
-          affect: "y"
-      - ref: matrix_inner_top
-        shift: [0.5 kx, 0.5 (ky + _padding)]
+        shift: [-0.5 (kx + _padding), -0.5 ky]
 
 outlines:
   raw:
@@ -306,8 +287,15 @@ outlines:
     - $extends: templates.board_matrix
       $args: [pd]
   board_thumbfan:
-    - $extends: templates.board_thumbfan
-      $args: [0]
+    - what: polygon
+      points:
+      - ref: matrix_pinky_home
+      - ref: _helper_mcu_bottomleft
+      - ref: _helper_mcu_bottomright
+      - ref: _helper_thumbfan_bottom
+      - ref: _helper_thumbfan_bottom
+        shift: [0, ky]
+      - ref: _helper_thumbfan_bottomleft
   board_mcu:
     - what: polygon
       points:
@@ -350,30 +338,6 @@ outlines:
     - -keys
 
   # for cases
-  _case_matrix:
-    - $extends: templates.board_matrix
-      $args: [cpd]
-  _case_thumbfan:
-    - $extends: templates.board_thumbfan
-      $args: [cpd]
-  _case_mcu:
-    - $extends: templates.board_mcu
-      $args: [cpd]
-
-  _case_keywell:
-    - _case_matrix
-    - _case_thumbfan
-  _case_board:
-    - _case_matrix
-    - _case_thumbfan
-    - name: _case_mcu
-      fillet: 1.5
-
-  _case_top:
-    - name: _case_keywell
-      fillet: 1.5
-    - -keywell_holes
-
   _case_bottom_inner:
     - name: board
       expand: bottom_wall_adjust
@@ -522,23 +486,19 @@ outlines:
       radius: support_radius
     - what: circle
       where:
-        - ref: thumbfan_far_thumb
-          shift: [-0.75 kx, -0.5 ky]
+        - ref: _helper_thumbfan_bottom
       radius: support_radius
     - what: circle
       where:
-        - ref: thumbfan_near_thumb
-          shift: [-0.5 kx, -0.5 ky]
+        - ref: _helper_thumbfan_bottomleft
       radius: support_radius
     - what: circle
       where:
-        - ref: matrix_pinky_bottom
-          shift: [-0.5 kx, -0.5 py]
+        - ref: _helper_matrix_bottomleft
       radius: support_radius
     - what: circle
       where:
-        - ref: matrix_pinky_top
-          shift: [-0.5 kx, 0.5 py]
+        - ref: _helper_matrix_topleft
       radius: support_radius
     - what: rectangle
       where:
@@ -642,7 +602,7 @@ pcbs:
       choc_hotswap_matrix:
         what: infused-kim/choc
         where:
-        - /matrix_.*/
+        - /^matrix_.*/
         params:
           reverse: true
           hotswap: true
@@ -651,8 +611,8 @@ pcbs:
       choc_hotswap_thumb:
         what: infused-kim/choc
         where:
-        - /thumbfan_home_thumb/
-        - /thumbfan_near_thumb/
+        - /^thumbfan_home_thumb/
+        - /^thumbfan_near_thumb/
         params:
           reverse: true
           hotswap: true
@@ -661,7 +621,7 @@ pcbs:
       choc_hotswap_thumb_far:
         what: infused-kim/choc
         where:
-        - /thumbfan_far_thumb/
+        - /^thumbfan_far_thumb/
         params:
           reverse: true
           hotswap: true
