@@ -22,6 +22,8 @@ units:
   bottom_height: 2.5
   bottom_wall_thickness: 1.5
   bottom_wall_adjust: 0.1
+  usbc_notch_radius: 3
+  usbc_notch_width: 10
   switch_height: 2.2
   plate_height: 1.3
   standoff_height: 3 + 0.2
@@ -426,6 +428,22 @@ outlines:
           shift: [kx, -ky]
       radius: magnet_slot_radius
 
+  _case_usbc_notch:
+    - what: circle
+      where:
+        - ref: _helper_mcu_middle
+          shift: [-0.5 * usbc_notch_width, 0]
+      radius: usbc_notch_radius
+    - what: circle
+      where:
+        - ref: _helper_mcu_middle
+          shift: [0.5 * usbc_notch_width, 0]
+      radius: usbc_notch_radius
+    - what: rectangle
+      where:
+        - ref: _helper_mcu_middle
+      size: [usbc_notch_width, usbc_notch_radius * 2]
+
   _case_rubbers:
     - what: circle
       radius: rubber_radius
@@ -526,6 +544,12 @@ cases:
       shift: [0, 0, bottom_height + socket_height + pcb_height]
       rotate: [0,45, 0]
 
+  _usbc_notch:
+    - name: _case_usbc_notch
+      extrude: 5
+      rotate: [-90, 0, 0]
+      shift: [0, 0, bottom_height + socket_height + pcb_height + 3]
+
   bottom:
     - _bottom_base
     - _bottom_wall
@@ -534,6 +558,7 @@ cases:
     - -_magnet_slots
     - -_rubbers
     - -_sw_notch
+    - -_usbc_notch
 
   # for debugging
   pcb:
