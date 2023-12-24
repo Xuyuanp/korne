@@ -199,6 +199,32 @@ points:
         - ref: thumbfan_far_thumb
           shift: [5, 3 + 0.5 kx]
 
+    # helpers for rubbers
+    _helper_rubber_topleft:
+      anchor:
+        - ref: _helper_matrix_topleft
+          orient: -135
+          shift: [0, 10]
+    _helper_rubber_bottomleft:
+      anchor:
+        - ref: _helper_matrix_bottomleft
+          orient: -45
+          shift: [0, 10]
+    _helper_rubber_topright:
+      anchor:
+        - ref: _helper_mcu_topright
+          orient: 135
+          shift: [0, 10]
+    _helper_rubber_bottomright:
+      anchor:
+        - ref: _helper_thumbfan_bottom
+          orient: -45
+          shift: [0, 10]
+    _helper_rubber_topmiddle:
+      anchor:
+        - ref: matrix_middle_top
+          shift: [0, 5.5]
+
 templates:
   board_matrix:
     $params: [_padding]
@@ -416,64 +442,17 @@ outlines:
 
   _case_rubbers:
     - what: circle
-      radius: rubber_radius
       where:
-      - ref: matrix_pinky_top
-        shift: [0.6, 0.5 py - rubber_radius - 1]
+      - /_helper_rubber_.*/
+      adjust:
+        shift: [-rubber_radius, 0]
+      radius: rubber_radius
     - what: circle
-      radius: rubber_radius
       where:
-      - ref: matrix_pinky_top
-        shift: [-0.5 px + rubber_radius + 1, -0.6]
-
-    - what: circle
+      - /_helper_rubber_.*/
+      adjust:
+        shift: [rubber_radius, 0]
       radius: rubber_radius
-      where:
-      - ref: matrix_pinky_bottom
-        shift: [0.6, -(0.5 py - rubber_radius - 1)]
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: matrix_pinky_bottom
-        shift: [-0.5 px + rubber_radius + 1, 0.6]
-
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: _helper_topright
-        shift: [-2 * rubber_radius - 2, -rubber_radius - 0.6]
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: _helper_topright
-        shift: [-rubber_radius - 0.6, -2 * rubber_radius - 2]
-
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: thumbfan_far_thumb
-        shift: [-0.75 kx, -0.5 ky]
-        rotate: -60
-      - shift: [1.5, 2.5 rubber_radius + 0.7 ]
-
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: thumbfan_far_thumb
-        shift: [-0.75 kx, -0.5 ky]
-        rotate: -60
-      - shift: [-5.8, 2.5 rubber_radius - 2]
-
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: matrix_middle_top
-        shift: [-rubber_radius, rubber_radius]
-    - what: circle
-      radius: rubber_radius
-      where:
-      - ref: matrix_middle_top
-        shift: [rubber_radius, rubber_radius]
 
   _pcb_supports:
     - what: circle
@@ -642,12 +621,12 @@ pcbs:
       key_vias:
         what: via
         where:
-        - /matrix_ring_.*/
-        - /matrix_middle_.*/
-        - /matrix_index_.*/
-        - /matrix_inner_.*/
+        - /^matrix_ring_.*/
+        - /^matrix_middle_.*/
+        - /^matrix_index_.*/
+        - /^matrix_inner_.*/
         - matrix_pinky_top
-        - /thumbfan_.*/
+        - /^thumbfan_.*/
         adjust:
           shift: [0, 8.5]
         params:
