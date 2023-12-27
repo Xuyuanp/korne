@@ -11,8 +11,6 @@ units:
   px: kx + pd
   py: ky + pd
 
-  cpd: 4
-
   thumb_shift: 1.6 ky
 
   mcu_width: 17.78
@@ -40,6 +38,7 @@ points:
   key:
     width: kx
     height: ky
+    bind: [0.5 pd, 0]
   zones:
     matrix:
       key:
@@ -60,6 +59,7 @@ points:
         inner.key:
           stagger: -0.2 ky
           column_net: col_inner
+          bind: [0, 0]
       rows:
         bottom:
           row_net: row_bottom
@@ -125,7 +125,7 @@ points:
           affect: "y"
         - ref: _helper_mcu_bottomright
           affect: "x"
-    _helper_mcu_middle:
+    _helper_mcu_topmiddle:
       anchor:
         - aggregate.parts:
           - ref: _helper_mcu_topleft
@@ -225,6 +225,16 @@ points:
         - ref: matrix_middle_top
           shift: [0, 5.5]
 
+    _helper_mcu_center:
+      anchor:
+        - ref: _helper_mcu_topmiddle
+          shift: [0, -0.5 mcu_height]
+
+    _helper_niceview_center:
+      anchor:
+        - ref: _helper_mcu_topmiddle
+          shift: [0, -0.5 mcu_height - 4]
+
 outlines:
   raw:
     - what: rectangle
@@ -233,12 +243,6 @@ outlines:
       asym: source
       size: [kx + 2, ky + 2]
       corner: pd
-  keys:
-    - what: rectangle
-      where:
-      - -/_helper_.*/
-      size: [kx - 0.5, ky - 0.5]
-      bound: false
   switches:
     - what: rectangle
       where:
@@ -249,63 +253,20 @@ outlines:
       where:
       - -/_helper_.*/
       size: 15
+
   board_matrix:
-    - what: polygon
-      points:
-        - ref: matrix_pinky_top
-          shift: [-0.5 px, 0.5 ky]
-
-        - - ref: matrix_ring_top
-            shift: [-0.5 px, 0]
-            affect: "x"
-          - ref: matrix_pinky_top
-            shift: [0, 0.5 ky]
-            affect: "y"
-
-        - ref: matrix_ring_top
-          shift: [-0.5 px, 0.5 ky]
-
-        - - ref: matrix_middle_top
-            shift: [-0.5 px, 0]
-            affect: "x"
-          - ref: matrix_ring_top
-            shift: [0, 0.5 ky]
-            affect: "y"
-
-        - ref: matrix_middle_top
-          shift: [-0.5 px, 0.5 ky]
-        - ref: matrix_middle_top
-          shift: [0.5 px, 0.5 ky]
-
-        - - ref: matrix_middle_top
-            shift: [0.5 px, 0]
-            affect: "x"
-          - ref: matrix_index_top
-            shift: [0, 0.5 ky]
-            affect: "y"
-
-        - ref: matrix_index_top
-          shift: [0.5 px, 0.5 ky]
-
-        - - ref: matrix_index_top
-            shift: [0.5 px, 0]
-            affect: "x"
-          - ref: matrix_inner_top
-            shift: [0, 0.5 ky]
-            affect: "y"
-
-        - ref: matrix_inner_top
-          shift: [0.5 kx, 0.5 ky] # X axis shift 0.5kx to avoid overlap
-
-        - - ref: matrix_inner_bottom
-            shift: [0.5 kx, 0]
-            affect: "x"
-          - ref: matrix_pinky_bottom
-            shift: [0, -0.5 ky]
-            affect: "y"
-
-        - ref: matrix_pinky_bottom
-          shift: [-0.5 px, -0.5 ky]
+    - what: rectangle
+      where:
+      - /^matrix_.*/
+      size: [kx, ky]
+      bound: true
+    - what: rectangle
+      where:
+      - ref: matrix_pinky_bottom
+        affect: "y"
+      - ref: matrix_middle_bottom
+        affect: "x"
+      size: [5 kx + 2 pd, ky]
 
   board_thumbfan:
     - what: polygon
@@ -352,11 +313,9 @@ outlines:
     - board
     - -screw_holes
   mcu_cover:
-    - board_mcu
+    - name: board_mcu
+      expand: -0.5
     - -mcu_cover_holes
-  combo:
-    - board
-    - -keys
 
   # for cases
   _case_bottom_inner:
@@ -391,7 +350,7 @@ outlines:
         - ref: _helper_mcu_bottomright
           rotate: 30
         - shift: [0, 16.3]
-      size: 18
+      size: [4, 18]
 
   _case_magnet_slots:
     - what: circle
@@ -422,17 +381,17 @@ outlines:
   _case_usbc_notch:
     - what: circle
       where:
-        - ref: _helper_mcu_middle
+        - ref: _helper_mcu_topmiddle
           shift: [-0.5 * usbc_notch_width, 0]
       radius: usbc_notch_radius
     - what: circle
       where:
-        - ref: _helper_mcu_middle
+        - ref: _helper_mcu_topmiddle
           shift: [0.5 * usbc_notch_width, 0]
       radius: usbc_notch_radius
     - what: rectangle
       where:
-        - ref: _helper_mcu_middle
+        - ref: _helper_mcu_topmiddle
       size: [usbc_notch_width, usbc_notch_radius * 2]
 
   _case_rubbers:
@@ -467,6 +426,42 @@ outlines:
   _case_pcb_supports:
     - _case_bottom_inner
     - ~_pcb_supports
+
+  _preview_mcu:
+    - what: rectangle
+      where:
+      - ref: _helper_mcu_center
+      size: [mcu_width, mcu_height]
+  _preview_niceview:
+    - what: rectangle
+      where:
+      - ref: _helper_niceview_center
+      size: [14, 36]
+  _preview_keycaps:
+    - what: rectangle
+      where:
+      - - -/_helper_.*/
+        - -/thumbfan_far_thumb/
+      size: [ky - 0.5, ky - 0.5]
+      bound: false
+      corner: 1.5
+    - what: rectangle
+      where:
+      - thumbfan_far_thumb
+      size: [1.5 ky - 0.5, ky - 0.5]
+      corner: 1.5
+
+  preview:
+    - board
+    - -_preview_keycaps
+    - -screw_holes
+    - -mcu_cover_holes
+    - ^mcu_cover
+    - ^_case_bottom_inner
+    - ^_case_bottom_outer
+    - ^_preview_mcu
+    - ^_preview_niceview
+    - ^_case_sw_notch
 
 cases:
   top:
@@ -507,7 +502,7 @@ cases:
     - name: _case_sw_notch
       extrude: 10
       shift: [0, 0, bottom_height + socket_height + pcb_height]
-      rotate: [0,45, 0]
+      rotate: [0, 45, 0]
 
   _usbc_notch:
     - name: _case_usbc_notch
@@ -567,6 +562,7 @@ pcbs:
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
+          keycaps_x: ky
       choc_hotswap_thumb:
         what: infused-kim/choc
         where:
@@ -577,6 +573,7 @@ pcbs:
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
+          keycaps_x: ky
       choc_hotswap_thumb_far:
         what: infused-kim/choc
         where:
@@ -615,8 +612,7 @@ pcbs:
         what: infused-kim/nice_nano_pretty
         where:
           ref:
-          - _helper_mcu_middle
-          shift: [0, -0.5 mcu_height]
+          - _helper_mcu_center
         params:
           P4: row_top
           P5: row_home
@@ -650,8 +646,7 @@ pcbs:
         what: infused-kim/nice_view
         where:
           ref:
-          - _helper_mcu_middle
-          shift: [0, -0.5 mcu_height - 4]
+          - _helper_niceview_center
         params:
           reverse: true
           jumpers_at_bottom: true
