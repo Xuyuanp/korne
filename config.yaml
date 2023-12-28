@@ -699,15 +699,16 @@ pcbs:
           ref:
           - _helper_topright
           shift: [-1.7, -mcu_height - 5.5]
-
         params:
           reverse: true
+          from: RST
+          to: GND
       reset_via_gnd:
         what: via
         where:
           ref:
           - _helper_topright
-          shift: [-2.425, -mcu_height - 5.5]
+          shift: [-0.975, -mcu_height - 5.5]
         params:
           net: "GND"
       reset_via_rst:
@@ -715,7 +716,7 @@ pcbs:
         where:
           ref:
           - _helper_topright
-          shift: [-0.975, -mcu_height - 5.5]
+          shift: [-2.425, -mcu_height - 5.5]
         params:
           net: "RST"
 
