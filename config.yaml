@@ -451,6 +451,12 @@ outlines:
       size: [1.5 ky - 0.5, ky - 0.5]
       corner: 1.5
 
+  _preview_battery:
+    - what: rectangle
+      where:
+      - ref: _helper_mcu_center
+      size: [12, 30]
+
   preview:
     - board
     - -_preview_keycaps
@@ -461,6 +467,7 @@ outlines:
     - ^_case_bottom_outer
     - ^_preview_mcu
     - ^_preview_niceview
+    - ^_preview_battery
     - ^_case_sw_notch
 
 cases:
@@ -526,9 +533,43 @@ cases:
     - -_usbc_notch
 
   # for debugging
-  pcb:
+  _pcb:
     - name: board
       extrude: pcb_height
+    - name: _preview_mcu
+      extrude: 5
+      shift: [0, 0, pcb_height]
+    - name: _preview_niceview
+      extrude: 6.5
+      shift: [0, 0, pcb_height]
+    - name: mcu_cover_holes
+      extrude: pcb_height
+      operation: subtract
+    - name: mcu_cover_holes
+      extrude: pcb_height
+      operation: subtract
+    - name: screw_holes
+      extrude: pcb_height
+      operation: subtract
+    - name: mcu_cover
+      extrude: 2.5
+      shift: [0, 0, pcb_height+7]
+    - name: mcu_cover_holes
+      extrude: 7
+      shift: [0, 0, pcb_height]
+
+  preview:
+    - name: bottom
+      what: case
+    - name: _pcb
+      what: case
+      shift: [0, 0, bottom_height + socket_height]
+    - name: top
+      what: case
+      shift: [0, 0, bottom_height + socket_height + pcb_height]
+    - name: _preview_keycaps
+      extrude: 8
+      shift: [0, 0, bottom_height + socket_height + pcb_height]
 
 pcbs:
   board_topplate:
