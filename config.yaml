@@ -82,11 +82,12 @@ points:
           width: 1.5 kx
           column_net: col_inner
         _bridge_far_home.key:
-          spread: -0.25 kx - 0.5 (kx - ky)
+          spread: -0.25 kx
           splay: -90
           skip: true
         home.key:
           splay: 15
+          spread: -0.5 (kx + ky)
           origin: [0.5 kx, -0.5 ky]
           column_net: col_index
         near.key:
