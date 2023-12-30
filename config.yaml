@@ -11,7 +11,7 @@ units:
   px: kx + pd
   py: ky + pd
 
-  thumb_shift: 1.6 ky
+  thumb_shift: 1.5 ky
 
   mcu_width: 17.78
   mcu_height: 33
@@ -38,7 +38,7 @@ points:
   key:
     width: kx
     height: ky
-    bind: [0.5 pd, 0]
+    bind: 0
   zones:
     matrix:
       key:
@@ -47,19 +47,22 @@ points:
       columns:
         pinky.key:
           column_net: col_pinky
+          bind: [0.5 pd, 0]
         ring.key:
           stagger: 0.65 ky
           column_net: col_ring
+          bind: [0, 0.5 pd, 0, 0]
         middle.key:
           stagger: 0.25 ky
           column_net: col_middle
         index.key:
           stagger: -0.35 ky
           column_net: col_index
+          bind: [0, 0, 0, 0.5 pd]
         inner.key:
           stagger: -0.2 ky
           column_net: col_inner
-          bind: [0, 0]
+          bind: [0, 0, 0, 0.5 pd]
       rows:
         bottom:
           row_net: row_bottom
@@ -82,7 +85,7 @@ points:
           width: 1.5 kx
           column_net: col_inner
         _bridge_far_home.key:
-          spread: -0.25 kx
+          spread: -0.25 kx - 0.5 (kx - ky)
           splay: -90
           skip: true
         home.key:
@@ -168,8 +171,8 @@ points:
           - ref: matrix_ring_top
           affect: "x"
         - aggregate.parts:
-          - ref: matrix_pinky_top
-          - ref: matrix_pinky_home
+          - ref: matrix_ring_top
+          - ref: matrix_ring_home
           affect: "y"
     _helper_screw_holes_bottomleft:
       anchor:
@@ -177,9 +180,8 @@ points:
           - ref: matrix_pinky_home
           - ref: matrix_ring_home
           affect: "x"
-        - aggregate.parts:
-          - ref: matrix_pinky_home
-          - ref: matrix_pinky_bottom
+        - ref: matrix_ring_bottom
+          shift: [-0.5 px, -0.5 ky]
           affect: "y"
     _helper_screw_holes_topright:
       anchor:
@@ -188,8 +190,8 @@ points:
           - ref: matrix_inner_top
           affect: "x"
         - aggregate.parts:
-          - ref: matrix_index_top
-          - ref: matrix_index_home
+          - ref: matrix_inner_top
+          - ref: matrix_inner_home
           affect: "y"
     _helper_screw_holes_palm:
       anchor:
@@ -599,6 +601,8 @@ pcbs:
         what: infused-kim/choc
         where:
         - /^matrix_.*/
+        adjust:
+          rotate: 180
         params:
           reverse: true
           hotswap: true
@@ -626,10 +630,21 @@ pcbs:
           from: "{{colrow}}"
           to: "{{column_net}}"
           keycaps_x: 1.5 kx
-      diode:
+      diode_matrix:
         what: diode
         where:
-        - -/_helper_.*/
+        - /^matrix_.*/
+        params:
+          include_tht: true
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [1, 5]
+          rotate: 180
+      diode_thumbfan:
+        what: diode
+        where:
+        - /^thumbfan_.*/
         params:
           include_tht: true
           from: "{{colrow}}"
@@ -637,14 +652,22 @@ pcbs:
         adjust:
           shift: [1, -5]
           rotate: 180
-      key_vias:
+      vias_matrix:
         what: via
         where:
-        - /^matrix_ring_.*/
-        - /^matrix_middle_.*/
-        - /^matrix_index_.*/
-        - /^matrix_inner_.*/
-        - matrix_pinky_top
+        - /^matrix_.*/
+        # - /^matrix_ring_.*/
+        # - /^matrix_middle_.*/
+        # - /^matrix_index_.*/
+        # - /^matrix_inner_.*/
+        # - matrix_pinky_top
+        adjust:
+          shift: [0, -8]
+        params:
+          net: "{{column_net}}"
+      vias_thumbfan:
+        what: via
+        where:
         - /^thumbfan_.*/
         adjust:
           shift: [0, 8]
