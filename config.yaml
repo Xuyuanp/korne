@@ -11,7 +11,7 @@ units:
   px: kx + pd
   py: ky + pd
 
-  thumb_shift: 1.5 ky
+  thumb_shift: 1.55 ky
 
   mcu_width: 17.78
   mcu_height: 33
@@ -345,7 +345,7 @@ outlines:
     - what: circle
       where:
       - /_helper_screw_holes_.*/
-      radius: 1.4
+      radius: 1.55
 
   _case_sw_notch:
     - what: rectangle
@@ -445,13 +445,13 @@ outlines:
       where:
       - - -/_helper_.*/
         - -/thumbfan_far_thumb/
-      size: [ky - 0.5, ky - 0.5]
+      size: [kx - 0.5, ky - 0.5]
       bound: false
       corner: 1.5
     - what: rectangle
       where:
       - thumbfan_far_thumb
-      size: [1.5 ky - 0.5, ky - 0.5]
+      size: [1.5 kx - 0.5, ky - 0.5]
       corner: 1.5
 
   _preview_battery:
@@ -656,11 +656,6 @@ pcbs:
         what: via
         where:
         - /^matrix_.*/
-        # - /^matrix_ring_.*/
-        # - /^matrix_middle_.*/
-        # - /^matrix_index_.*/
-        # - /^matrix_inner_.*/
-        # - matrix_pinky_top
         adjust:
           shift: [0, -8]
         params:
@@ -804,7 +799,8 @@ pcbs:
         where:
           - /_helper_screw_holes_.*/
         params:
-          outline: 0.5
+          outline: 0
+          drill: 3.5
       mcu_cover_holes:
         what: infused-kim/mounting_hole
         where:
