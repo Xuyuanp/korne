@@ -11,7 +11,7 @@ units:
   px: kx + pd
   py: ky + pd
 
-  thumb_shift: 1.55 ky
+  thumb_shift: 1.6 ky
 
   mcu_width: 17.78
   mcu_height: 33
@@ -226,7 +226,7 @@ points:
     _helper_rubber_topmiddle:
       anchor:
         - ref: matrix_middle_top
-          shift: [0, 5.5]
+          shift: [0, 5]
 
     _helper_mcu_center:
       anchor:
@@ -421,11 +421,16 @@ outlines:
         - _helper_mcu_topright
         - _helper_mcu_bottomright
       radius: support_radius
-    - what: rectangle
+    - what: circle
       where:
         - ref: matrix_middle_top
-          shift: [0, 0.5 ky]
-      size: [py + 2, 1]
+          shift: [-0.5 kx, 0.5 ky]
+      radius: support_radius
+    - what: circle
+      where:
+        - ref: matrix_middle_top
+          shift: [0.5 kx, 0.5 ky]
+      radius: support_radius
   _case_pcb_supports:
     - _case_bottom_inner
     - ~_pcb_supports
@@ -496,7 +501,7 @@ cases:
   _magnet_slots:
     - name: _case_magnet_slots
       extrude: magnet_slot_depth
-      shift: [0, 0, bottom_height - magnet_slot_depth]
+      shift: [0, 0, bottom_height - magnet_slot_depth + 0.1]
   _rubbers:
     - name: _case_rubbers
       extrude: rubber_height
@@ -799,7 +804,7 @@ pcbs:
         where:
           - /_helper_screw_holes_.*/
         params:
-          outline: 0
+          outline: 0.1
           drill: 3.5
       mcu_cover_holes:
         what: infused-kim/mounting_hole
@@ -815,7 +820,7 @@ pcbs:
           - matrix_pinky_bottom
           shift: [0.6 kx, -2]
         params:
-          text: "korne v0.2\\nby Xuyuan Pang"
+          text: "korne v0.3\\nby Xuyuan Pang"
           justify: left
       info_r:
         what: text
@@ -825,7 +830,7 @@ pcbs:
           shift: [0.6 kx, -2]
         params:
           layer: B.SilkS
-          text: "korne v0.2\\nby Xuyuan Pang"
+          text: "korne v0.3\\nby Xuyuan Pang"
           justify: right mirror
 
       jlc_marker:
