@@ -613,7 +613,6 @@ pcbs:
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
-          keycaps_x: ky
       choc_hotswap_thumb:
         what: infused-kim/choc
         where:
@@ -624,7 +623,6 @@ pcbs:
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
-          keycaps_x: ky
       choc_hotswap_thumb_far:
         what: infused-kim/choc
         where:
