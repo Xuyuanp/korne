@@ -1,5 +1,5 @@
 meta:
-  version: 0.3
+  version: 0.3.1
   name: korne
   author: XuyuanPang
 
@@ -345,7 +345,7 @@ outlines:
     - what: circle
       where:
       - /_helper_screw_holes_.*/
-      radius: 1.55
+      radius: 1.4
 
   _case_sw_notch:
     - what: rectangle
@@ -818,7 +818,7 @@ pcbs:
           - matrix_pinky_bottom
           shift: [0.6 kx, -2]
         params:
-          text: "korne v0.3\\nby Xuyuan Pang"
+          text: "korne v0.3.1\\nby Xuyuan Pang"
           justify: left
       info_r:
         what: text
@@ -828,7 +828,7 @@ pcbs:
           shift: [0.6 kx, -2]
         params:
           layer: B.SilkS
-          text: "korne v0.3\\nby Xuyuan Pang"
+          text: "korne v0.3.1\\nby Xuyuan Pang"
           justify: right mirror
 
       jlc_marker:
