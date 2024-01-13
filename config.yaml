@@ -19,7 +19,7 @@ units:
   pcb_height: 1.6
   bottom_height: 2.5
   bottom_wall_thickness: 1.5
-  bottom_wall_adjust: 0.1
+  bottom_wall_adjust: 0.25
   usbc_notch_radius: 3
   usbc_notch_width: 10
   support_radius: 2
