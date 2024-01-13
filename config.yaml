@@ -592,6 +592,9 @@ pcbs:
     outlines:
       main:
         outline: board
+      keycaps:
+        outline: _preview_keycaps
+        layer: Dwgs.User
       # mcu:
       #   outline: board_mcu
       #   layer: F.SilkS
@@ -609,6 +612,7 @@ pcbs:
         adjust:
           rotate: 180
         params:
+          show_keycaps: false
           reverse: true
           hotswap: true
           from: "{{colrow}}"
@@ -619,6 +623,7 @@ pcbs:
         - /^thumbfan_home_thumb/
         - /^thumbfan_near_thumb/
         params:
+          show_keycaps: false
           reverse: true
           hotswap: true
           from: "{{colrow}}"
@@ -628,6 +633,7 @@ pcbs:
         where:
         - /^thumbfan_far_thumb/
         params:
+          show_keycaps: false
           reverse: true
           hotswap: true
           from: "{{colrow}}"
