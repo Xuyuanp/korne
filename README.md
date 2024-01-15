@@ -20,3 +20,5 @@
 - [ErgoPad](https://pashutk.com/ergopad/)
 - [Flatfoot Fox's awesome blog](https://flatfootfox.com/ergogen-introduction/)
 - [samoklava](https://github.com/soundmonster/samoklava)
+- [infused-kim's footprints
+](https://github.com/infused-kim/kb_ergogen_fp)
