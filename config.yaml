@@ -584,6 +584,19 @@ pcbs:
     outlines:
       main:
         outline: topplate_fr4
+    footprints:
+      jlc_marker:
+        what: text
+        where:
+          - aggregate.parts:
+              - ref: matrix_index_bottom
+              - ref: thumbfan_near_thumb
+            affect: "y"
+          - ref: thumbfan_near_thumb
+            shift: [0.5 kx, 0]
+            affect: "x"
+        params:
+          text: "JLCJLCJLCJLC"
   board_bottomplate:
     outlines:
       main:
@@ -595,15 +608,18 @@ pcbs:
       keycaps:
         outline: _preview_keycaps
         layer: Dwgs.User
-      # mcu:
-      #   outline: board_mcu
-      #   layer: F.SilkS
-      # notch:
-      #   outline: _case_sw_notch
-      #   layer: F.SilkS
-      # supports:
-      #   outline: _case_pcb_supports
-      #   layer: F.SilkS
+      mcu:
+        outline: board_mcu
+        layer: Dwgs.User
+      notch:
+        outline: _case_sw_notch
+        layer: Dwgs.User
+      supports:
+        outline: _case_pcb_supports
+        layer: Dwgs.User
+      standoffs:
+        outline: _case_mountings_outer
+        layer: Dwgs.User
     footprints:
       choc_hotswap_matrix:
         what: infused-kim/choc
@@ -617,28 +633,16 @@ pcbs:
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
-      choc_hotswap_thumb:
+      choc_hotswap_thumbfan:
         what: infused-kim/choc
         where:
-        - /^thumbfan_home_thumb/
-        - /^thumbfan_near_thumb/
+        - /^thumbfan_.*/
         params:
           show_keycaps: false
           reverse: true
           hotswap: true
           from: "{{colrow}}"
           to: "{{column_net}}"
-      choc_hotswap_thumb_far:
-        what: infused-kim/choc
-        where:
-        - /^thumbfan_far_thumb/
-        params:
-          show_keycaps: false
-          reverse: true
-          hotswap: true
-          from: "{{colrow}}"
-          to: "{{column_net}}"
-          keycaps_x: 1.5 kx
       diode_matrix:
         what: diode
         where:
