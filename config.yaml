@@ -16,21 +16,6 @@ units:
   mcu_width: 17.78
   mcu_height: 33
 
-  pcb_height: 1.6
-  bottom_height: 2.5
-  bottom_wall_thickness: 1.5
-  bottom_wall_adjust: 0.25
-  usbc_notch_radius: 3
-  usbc_notch_width: 10
-  support_radius: 2
-  switch_height: 2.2
-  plate_height: 1.3
-  standoff_height: 3 + 0.2
-  socket_height: 2
-  magnet_slot_radius: 3.05
-  magnet_slot_depth: 2
-  rubber_radius: 4.05
-  rubber_height: 1.4
   m2r: 1.05 # radius of m2 screw
   screw_hole_size: m2r # screw hole size
 
@@ -45,31 +30,47 @@ points:
         padding: ky
         spread: u
       columns:
-        pinky.key:
-          column_net: col_pinky
-          bind: [0.5 pd, 0]
-        ring.key:
-          stagger: 0.65 ky
-          column_net: col_ring
-          bind: [0, 0.5 pd, 0, 0]
-        middle.key:
-          stagger: 0.25 ky
-          column_net: col_middle
-        index.key:
-          stagger: -0.35 ky
-          column_net: col_index
-          bind: [0, 0, 0, 0.5 pd]
-        inner.key:
-          stagger: -0.2 ky
-          column_net: col_inner
-          bind: [0, 0, 0, 0.5 pd]
+        pinky:
+          key:
+            bind: [0.5 pd, 0]
+          rows:
+            top.kn: 0
+            home.kn: 1
+            bottom.kn: 2
+        ring:
+          key:
+            stagger: 0.65 ky
+            bind: [0, 0.5 pd, 0, 0]
+          rows:
+            top.kn: 3
+            home.kn: 4
+            bottom.kn: 5
+        middle:
+          key.stagger: 0.25 ky
+          rows:
+            top.kn: 6
+            home.kn: 7
+            bottom.kn: 8
+        index:
+          key:
+            stagger: -0.35 ky
+            bind: [0, 0, 0, 0.5 pd]
+          rows:
+            top.kn: 9
+            home.kn: 10
+            bottom.kn: 11
+        inner:
+          key:
+            stagger: -0.2 ky
+            bind: [0, 0, 0, 0.5 pd]
+          rows:
+            top.kn: 12
+            home.kn: 13
+            bottom.kn: 14
       rows:
         bottom:
-          row_net: row_bottom
         home:
-          row_net: row_home
         top:
-          row_net: row_top
     thumbfan:
       anchor:
         - ref: matrix_inner_bottom
@@ -83,7 +84,7 @@ points:
       columns:
         far.key:
           width: 1.5 kx
-          column_net: col_inner
+          kn: 17
         _bridge_far_home.key:
           spread: -0.25 kx - 0.5 (kx - ky)
           splay: -90
@@ -92,13 +93,13 @@ points:
           splay: 15
           spread: -0.5 (kx + ky)
           origin: [0.5 kx, -0.5 ky]
-          column_net: col_index
+          kn: 16
         near.key:
           splay: 15
           origin: [0.5 kx, -0.5 ky]
-          column_net: col_middle
+          kn: 15
       rows:
-        thumb.row_net: row_thumb
+        thumb:
 
     _helper_topright:
       anchor:
@@ -164,79 +165,10 @@ points:
         - ref: matrix_pinky_bottom
           shift: [-0.5 px, -0.5 ky]
 
-    _helper_screw_holes_topleft:
-      anchor:
-        - aggregate.parts:
-          - ref: matrix_pinky_top
-          - ref: matrix_ring_top
-          affect: "x"
-        - aggregate.parts:
-          - ref: matrix_ring_top
-          - ref: matrix_ring_home
-          affect: "y"
-    _helper_screw_holes_bottomleft:
-      anchor:
-        - aggregate.parts:
-          - ref: matrix_pinky_home
-          - ref: matrix_ring_home
-          affect: "x"
-        - ref: matrix_ring_bottom
-          shift: [-0.5 px, -0.5 ky]
-          affect: "y"
-    _helper_screw_holes_topright:
-      anchor:
-        - aggregate.parts:
-          - ref: matrix_index_top
-          - ref: matrix_inner_top
-          affect: "x"
-        - aggregate.parts:
-          - ref: matrix_inner_top
-          - ref: matrix_inner_home
-          affect: "y"
-    _helper_screw_holes_palm:
-      anchor:
-        - ref: matrix_middle_bottom
-          shift: [-0.3 kx, -1.1 ky]
-    _helper_screw_holes_thumb:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [5, 3 + 0.5 kx]
-
-    # helpers for rubbers
-    _helper_rubber_topleft:
-      anchor:
-        - ref: _helper_matrix_topleft
-          orient: -135
-          shift: [0, 10]
-    _helper_rubber_bottomleft:
-      anchor:
-        - ref: _helper_matrix_bottomleft
-          orient: -45
-          shift: [0, 10]
-    _helper_rubber_topright:
-      anchor:
-        - ref: _helper_mcu_topright
-          orient: 135
-          shift: [0, 10]
-    _helper_rubber_bottomright:
-      anchor:
-        - ref: _helper_thumbfan_bottom
-          orient: -45
-          shift: [0, 10]
-    _helper_rubber_topmiddle:
-      anchor:
-        - ref: matrix_middle_top
-          shift: [0, 5]
-
     _helper_mcu_center:
       anchor:
         - ref: _helper_mcu_topmiddle
           shift: [0, -0.5 mcu_height]
-
-    _helper_niceview_center:
-      anchor:
-        - ref: _helper_mcu_topmiddle
-          shift: [0, -0.5 mcu_height - 4]
 
 outlines:
   raw:
@@ -263,18 +195,14 @@ outlines:
       - /^matrix_.*/
       size: [kx, ky]
       bound: true
-    - what: rectangle
-      where:
-      - ref: matrix_pinky_bottom
-        affect: "y"
-      - ref: matrix_middle_bottom
-        affect: "x"
-      size: [5 kx + 2 pd, ky]
 
   board_thumbfan:
     - what: polygon
       points:
-      - ref: matrix_pinky_home
+      - - ref: matrix_middle_bottom
+          affect: "y"
+        - ref: _helper_thumbfan_bottomleft
+          affect: "x"
       - ref: _helper_mcu_bottomleft
       - ref: _helper_mcu_bottomright
       - ref: _helper_thumbfan_bottom
@@ -288,11 +216,6 @@ outlines:
       - _helper_mcu_bottomright
       - _helper_mcu_topright
       - _helper_mcu_topleft
-  screw_holes:
-  - what: circle
-    where:
-    - /_helper_screw_holes_.*/
-    radius: screw_hole_size
   mcu_cover_holes:
   - what: circle
     where:
@@ -300,7 +223,6 @@ outlines:
     radius: screw_hole_size
   keywell_holes:
     - switches
-    - screw_holes
   keywell:
     - board_matrix
     - board_thumbfan
@@ -308,44 +230,10 @@ outlines:
     - keywell
     - name: board_mcu
       fillet: 1.5
-  topplate_fr4:
-    - name: keywell
-      fillet: 1.5
-    - -keywell_holes
-  bottomplate_fr4:
-    - board
-    - -screw_holes
   mcu_cover:
     - name: board_mcu
       expand: -0.5
     - -mcu_cover_holes
-
-  # for cases
-  _case_bottom_inner:
-    - name: board
-      expand: bottom_wall_adjust
-  _case_bottom_outer:
-    - name: board
-      expand: bottom_wall_thickness + bottom_wall_adjust
-  _case_bottom_wall:
-    - _case_bottom_outer
-    - -_case_bottom_inner
-
-  _case_mountings_outer:
-    - what: circle
-      where:
-      - /_helper_screw_holes_.*/
-      radius: 2.9
-  _case_mountings_outer_root:
-    - what: circle
-      where:
-      - /_helper_screw_holes_.*/
-      radius: 3.3
-  _case_mountings_inner:
-    - what: circle
-      where:
-      - /_helper_screw_holes_.*/
-      radius: 1.4
 
   _case_sw_notch:
     - what: rectangle
@@ -355,96 +243,11 @@ outlines:
         - shift: [0, 16.3]
       size: [4, 18]
 
-  _case_magnet_slots:
-    - what: circle
-      where:
-      - ref: matrix_pinky_home
-      radius: magnet_slot_radius
-    - what: circle
-      where:
-      - ref: matrix_middle_top
-        shift: [0, -0.5 ky]
-      radius: magnet_slot_radius
-    - what: circle
-      where:
-      - ref: matrix_index_bottom
-        shift: [0, -ky]
-      radius: magnet_slot_radius
-    - what: circle
-      where:
-        - ref: matrix_inner_top
-          shift: [kx, -0.5 ky]
-      radius: magnet_slot_radius
-    - what: circle
-      where:
-        - ref: matrix_inner_bottom
-          shift: [1.2 kx, -ky]
-      radius: magnet_slot_radius
-
-  _case_usbc_notch:
-    - what: circle
-      where:
-        - ref: _helper_mcu_topmiddle
-          shift: [-0.5 * usbc_notch_width, 0]
-      radius: usbc_notch_radius
-    - what: circle
-      where:
-        - ref: _helper_mcu_topmiddle
-          shift: [0.5 * usbc_notch_width, 0]
-      radius: usbc_notch_radius
-    - what: rectangle
-      where:
-        - ref: _helper_mcu_topmiddle
-      size: [usbc_notch_width, usbc_notch_radius * 2]
-
-  _case_rubbers:
-    - what: circle
-      where:
-      - /_helper_rubber_.*/
-      adjust:
-        shift: [-rubber_radius, 0]
-      radius: rubber_radius
-    - what: circle
-      where:
-      - /_helper_rubber_.*/
-      adjust:
-        shift: [rubber_radius, 0]
-      radius: rubber_radius
-
-  _pcb_supports:
-    - what: circle
-      where:
-        - _helper_matrix_bottomleft
-        - _helper_matrix_topleft
-        - _helper_thumbfan_bottomleft
-        - _helper_thumbfan_bottom
-        - _helper_mcu_topright
-        - _helper_mcu_bottomright
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: matrix_middle_top
-          shift: [-0.5 kx, 0.5 ky]
-      radius: support_radius
-    - what: circle
-      where:
-        - ref: matrix_middle_top
-          shift: [0.5 kx, 0.5 ky]
-      radius: support_radius
-  _case_pcb_supports:
-    - _case_bottom_inner
-    - ~_pcb_supports
-
   _preview_mcu:
     - what: rectangle
       where:
       - ref: _helper_mcu_center
       size: [mcu_width, mcu_height]
-  _preview_niceview:
-    - what: rectangle
-      where:
-      - ref: _helper_niceview_center
-      size: [14, 36]
   _preview_keycaps:
     - what: rectangle
       where:
@@ -468,139 +271,13 @@ outlines:
   preview:
     - board
     - -_preview_keycaps
-    - -screw_holes
     - -mcu_cover_holes
     - ^mcu_cover
-    - ^_case_bottom_inner
-    - ^_case_bottom_outer
     - ^_preview_mcu
-    - ^_preview_niceview
     - ^_preview_battery
     - ^_case_sw_notch
 
-cases:
-  top:
-    - name: topplate_fr4
-      extrude: switch_height
-    - name: switches_outer
-      extrude: switch_height - plate_height
-      operation: subtract
-
-  _standoffs:
-    - name: _case_mountings_outer
-      extrude: bottom_height + socket_height
-    - name: _case_mountings_outer_root
-      extrude: bottom_height + 1
-    - name: _case_mountings_inner
-      shift: [0, 0, bottom_height + socket_height - standoff_height]
-      extrude: standoff_height
-      operation: subtract
-  _standoffs_inner:
-    - name: _case_mountings_inner
-      extrude: bottom_height
-  _magnet_slots:
-    - name: _case_magnet_slots
-      extrude: magnet_slot_depth
-      shift: [0, 0, bottom_height - magnet_slot_depth + 0.1]
-  _rubbers:
-    - name: _case_rubbers
-      extrude: rubber_height
-
-  _bottom_base:
-    - name: _case_bottom_outer
-      extrude: bottom_height
-  _bottom_wall:
-    - name: _case_bottom_wall
-      extrude: bottom_height + socket_height + pcb_height + switch_height
-
-  _sw_notch:
-    - name: _case_sw_notch
-      extrude: 10
-      shift: [0, 0, bottom_height + socket_height + pcb_height]
-      rotate: [0, 45, 0]
-
-  _usbc_notch:
-    - name: _case_usbc_notch
-      extrude: 5
-      rotate: [-90, 0, 0]
-      shift: [0, 0, bottom_height + socket_height + pcb_height + 3]
-
-  _pcb_supports:
-    - name: _case_pcb_supports
-      extrude: bottom_height + socket_height
-
-  bottom:
-    - _bottom_base
-    - _bottom_wall
-    - _pcb_supports
-    - -_standoffs_inner
-    - _standoffs
-    - -_magnet_slots
-    - -_rubbers
-    - -_sw_notch
-    - -_usbc_notch
-
-  # for debugging
-  _pcb:
-    - name: board
-      extrude: pcb_height
-    - name: _preview_mcu
-      extrude: 5
-      shift: [0, 0, pcb_height]
-    - name: _preview_niceview
-      extrude: 6.5
-      shift: [0, 0, pcb_height]
-    - name: mcu_cover_holes
-      extrude: pcb_height
-      operation: subtract
-    - name: mcu_cover_holes
-      extrude: pcb_height
-      operation: subtract
-    - name: screw_holes
-      extrude: pcb_height
-      operation: subtract
-    - name: mcu_cover
-      extrude: 2.5
-      shift: [0, 0, pcb_height+7]
-    - name: mcu_cover_holes
-      extrude: 7
-      shift: [0, 0, pcb_height]
-
-  preview:
-    - name: bottom
-      what: case
-    - name: _pcb
-      what: case
-      shift: [0, 0, bottom_height + socket_height]
-    - name: top
-      what: case
-      shift: [0, 0, bottom_height + socket_height + pcb_height]
-    - name: _preview_keycaps
-      extrude: 8
-      shift: [0, 0, bottom_height + socket_height + pcb_height]
-
 pcbs:
-  board_topplate:
-    outlines:
-      main:
-        outline: topplate_fr4
-    footprints:
-      jlc_marker:
-        what: text
-        where:
-          - aggregate.parts:
-              - ref: matrix_index_bottom
-              - ref: thumbfan_near_thumb
-            affect: "y"
-          - ref: thumbfan_near_thumb
-            shift: [0.5 kx, 0]
-            affect: "x"
-        params:
-          text: "JLCJLCJLCJLC"
-  board_bottomplate:
-    outlines:
-      main:
-        outline: bottomplate_fr4
   board:
     outlines:
       main:
@@ -614,25 +291,18 @@ pcbs:
       notch:
         outline: _case_sw_notch
         layer: Dwgs.User
-      supports:
-        outline: _case_pcb_supports
-        layer: Dwgs.User
-      standoffs:
-        outline: _case_mountings_outer
-        layer: Dwgs.User
     footprints:
       choc_hotswap_matrix:
         what: infused-kim/choc
         where:
         - /^matrix_.*/
-        adjust:
-          rotate: 180
         params:
           show_keycaps: false
           reverse: true
-          hotswap: true
-          from: "{{colrow}}"
-          to: "{{column_net}}"
+          hotswap: false
+          solder: true
+          from: "GND"
+          to: "k{{kn}}"
       choc_hotswap_thumbfan:
         what: infused-kim/choc
         where:
@@ -640,89 +310,53 @@ pcbs:
         params:
           show_keycaps: false
           reverse: true
-          hotswap: true
-          from: "{{colrow}}"
-          to: "{{column_net}}"
-      diode_matrix:
-        what: diode
-        where:
-        - /^matrix_.*/
-        params:
-          include_tht: true
-          from: "{{colrow}}"
-          to: "{{row_net}}"
-        adjust:
-          shift: [1, 5]
-          rotate: 180
-      diode_thumbfan:
-        what: diode
-        where:
-        - /^thumbfan_.*/
-        params:
-          include_tht: true
-          from: "{{colrow}}"
-          to: "{{row_net}}"
-        adjust:
-          shift: [1, -5]
-          rotate: 180
-      vias_matrix:
-        what: via
-        where:
-        - /^matrix_.*/
-        adjust:
-          shift: [0, -8]
-        params:
-          net: "{{column_net}}"
-      vias_thumbfan:
-        what: via
-        where:
-        - /^thumbfan_.*/
-        adjust:
-          shift: [0, 8]
-        params:
-          net: "{{column_net}}"
+          hotswap: false
+          solder: true
+          from: "GND"
+          to: "k{{kn}}"
       mcu:
         what: infused-kim/nice_nano_pretty
         where:
           ref:
           - _helper_mcu_center
         params:
-          P4: row_top
-          P5: row_home
-          P6: row_bottom
-          P7: row_thumb
-          P14: col_inner
-          P15: col_index
-          P18: col_middle
-          P19: col_ring
-          P20: col_pinky
-          # nice!view
-          P1: CS
-          P2: MOSI
-          P3: SCK
+          P0: k0
+          P1: k1
+          P2: k2
+          P3: k3
+          P4: k4
+          P5: k5
+          P6: k6
+          P7: k7
+          P8: k8
+          P9: k9
+          P10: k10
+          P14: k11
+          P15: k12
+          P16: k13
+          P18: k14
+          P19: k15
+          P20: k16
+          P21: k17
 
-          P20_label: 'C0'
-          P19_label: 'C1'
-          P18_label: 'C2'
-          P15_label: 'C3'
-          P14_label: 'C4'
-
-          P1_label: 'CS'
-          P2_label: 'SDA'
-          P3_label: 'SCL'
-          P4_label: 'R0'
-          P5_label: 'R1'
-          P6_label: 'R2'
-          P7_label: 'R3'
-
-      niceview:
-        what: infused-kim/nice_view
-        where:
-          ref:
-          - _helper_niceview_center
-        params:
-          reverse: true
-          jumpers_at_bottom: true
+          P0_label: k0
+          P1_label: k1
+          P2_label: k2
+          P3_label: k3
+          P4_label: k4
+          P5_label: k5
+          P6_label: k6
+          P7_label: k7
+          P8_label: k8
+          P9_label: k9
+          P10_label: k10
+          P14_label: k11
+          P15_label: k12
+          P16_label: k13
+          P18_label: k14
+          P19_label: k15
+          P20_label: k16
+          P21_label: k17
 
       reset:
         what: infused-kim/switch_reset
@@ -807,13 +441,6 @@ pcbs:
         params:
           side: "B"
 
-      mounting_holes:
-        what: infused-kim/mounting_hole
-        where:
-          - /_helper_screw_holes_.*/
-        params:
-          outline: 0.1
-          drill: 3.5
       mcu_cover_holes:
         what: infused-kim/mounting_hole
         where:
