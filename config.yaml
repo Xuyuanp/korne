@@ -106,7 +106,7 @@ points:
     _helper_mcu_topright:
       anchor:
         - ref: _helper_mcu_topleft
-          shift: [mcu_width + 4, 0]
+          shift: [mcu_width + 3, 0]
     _helper_mcu_bottomleft:
       anchor:
         - aggregate:
@@ -126,13 +126,8 @@ points:
         - aggregate:
             method: intersect
             parts:
-              - ref: thumbfan_far_thumb
-                shift: [0.5 kx, 0]
-              - ref: _helper_mcu_topright
-
-    _helper_topright:
-      anchor:
-        - ref: _helper_mcu_topright
+              - _helper_mcu_bottommiddle
+              - _helper_mcu_topright
 
     _helper_mcu_topmiddle:
       anchor:
@@ -159,20 +154,20 @@ points:
 
     _helper_pcb_power:
       anchor:
-        - ref: _helper_topright
+        - ref: _helper_mcu_topright
           shift: [-1.75, -mcu_height - 10]
 
     _helper_pcb_jstph:
       anchor:
         - ref: thumbfan_far_thumb
-          shift: [0, 0.5 ky + 5]
+          shift: [-1, 0.5 ky + 5]
           rotate: -120
 
     _helper_pcb_reset:
       anchor:
-        - ref: thumbfan_near_thumb
-          shift: [-0.5 kx + 1.7, 0.5 ky + 3.5]
-          rotate: 180
+        - ref: _helper_mcu_topmiddle
+          shift: [0, -1.7]
+          rotate: 90
 
 outlines:
   raw:
@@ -291,43 +286,50 @@ pcbs:
           ref:
             - _helper_mcu_center
         params:
-          P0: k0
-          P1: k1
-          P2: k2
+          # top row
+          P1: k12
+          P0: k9
+          P2: k6
           P3: k3
-          P4: k4
-          P5: k5
-          P6: k6
-          P7: k7
-          P8: k8
-          P9: k9
-          P10: k10
-          P14: k11
-          P15: k12
-          P16: k13
-          P18: k14
-          P19: k15
-          P20: k16
-          P21: k17
+          P4: k0
 
-          P0_label: k0
-          P1_label: k1
-          P2_label: k2
-          P3_label: k3
-          P4_label: k4
-          P5_label: k5
-          P6_label: k6
-          P7_label: k7
-          P8_label: k8
-          P9_label: k9
-          P10_label: k10
-          P14_label: k11
-          P15_label: k12
-          P16_label: k13
-          P18_label: k14
-          P19_label: k15
-          P20_label: k16
-          P21_label: k17
+          # home row
+          P5: k13
+          P6: k10
+          P7: k7
+          P8: k4
+          P9: k1
+
+          # bottom row
+          P21: k14
+          P20: k11
+          P19: k8
+          P18: k5
+          P15: k2
+
+          # thumb fan
+          P14: k15
+          P16: k16
+          P10: k17
+
+          # P0_label: k0
+          # P1_label: k1
+          # P2_label: k2
+          # P3_label: k3
+          # P4_label: k4
+          # P5_label: k5
+          # P6_label: k6
+          # P7_label: k7
+          # P8_label: k8
+          # P9_label: k9
+          # P10_label: k10
+          # P14_label: k11
+          # P15_label: k12
+          # P16_label: k13
+          # P18_label: k14
+          # P19_label: k15
+          # P20_label: k16
+          # P21_label: k17
 
       reset:
         what: infused-kim/switch_reset
