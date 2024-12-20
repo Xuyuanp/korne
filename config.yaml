@@ -102,8 +102,8 @@ points:
 
     _helper_anchor_b:
       anchor:
-      - ref: thumbfan_far_thumb
-        shift: [0.5 kx, 0.5 ky + 5]
+        - ref: thumbfan_far_thumb
+          shift: [0.5 kx, 0.5 ky + 5]
 
     # helpers to draw mcu area
     _helper_mcu_topleft:
@@ -134,8 +134,8 @@ points:
     _helper_mcu_topmiddle:
       anchor:
         - aggregate.parts:
-          - ref: _helper_mcu_topleft
-          - ref: _helper_mcu_topright
+            - ref: _helper_mcu_topleft
+            - ref: _helper_mcu_topright
 
     _helper_mcu_center:
       anchor:
@@ -175,49 +175,49 @@ outlines:
   raw:
     - what: rectangle
       where:
-      - -/_helper_.*/
+        - -/_helper_.*/
       asym: source
       size: [kx + 2, ky + 2]
       corner: pd
   switches:
     - what: rectangle
       where:
-      - -/_helper_.*/
+        - -/_helper_.*/
       size: 14
   switches_outer:
     - what: rectangle
       where:
-      - -/_helper_.*/
+        - -/_helper_.*/
       size: 15
 
   board_matrix:
     - what: rectangle
       where:
-      - /^matrix_.*/
+        - /^matrix_.*/
       size: [kx, ky]
       bound: true
 
   board_thumbfan:
     - what: rectangle
       where:
-      - /^thumbfan_.*/
+        - /^thumbfan_.*/
       size: [kx, ky]
       bound: true
     - what: rectangle
       where:
-      - thumbfan_far_thumb
+        - thumbfan_far_thumb
       size: [2 kx, ky]
       adjust:
         - shift: [-kx, 0]
     - what: rectangle
       where:
-      - thumbfan_near_thumb
+        - thumbfan_near_thumb
       size: [2 kx, 2 ky]
       adjust:
         - shift: [0.5 kx, 1 ky]
     - what: rectangle
       where:
-      - matrix_inner_bottom
+        - matrix_inner_bottom
       size: [kx, 2 ky]
       adjust:
         - shift: [0, -0.5 ky]
@@ -229,11 +229,11 @@ outlines:
   board_mcu:
     - what: polygon
       points:
-      - _helper_mcu_topleft
-      - _helper_mcu_bottomleft
-      - _helper_mcu_bottommiddle
-      - _helper_mcu_bottomright
-      - _helper_mcu_topright
+        - _helper_mcu_topleft
+        - _helper_mcu_bottomleft
+        - _helper_mcu_bottommiddle
+        - _helper_mcu_bottomright
+        - _helper_mcu_topright
 
   _board:
     - board_matrix
@@ -253,8 +253,8 @@ outlines:
   _preview_keycaps:
     - what: rectangle
       where:
-      - /^matrix_.*/
-      - /^thumbfan_.*/
+        - /^matrix_.*/
+        - /^thumbfan_.*/
       size: [kx - 0.5, ky - 0.5]
       bound: false
       corner: 1.5
@@ -267,14 +267,14 @@ outlines:
   _preview_battery:
     - what: rectangle
       where:
-      - ref: _helper_mcu_center
+        - ref: _helper_mcu_center
       size: [12, 30]
 
   mcu_cover_holes:
-  - what: circle
-    where:
-    - /_helper_mcu_cover_holes_.*/
-    radius: screw_hole_size
+    - what: circle
+      where:
+        - /_helper_mcu_cover_holes_.*/
+      radius: screw_hole_size
 
   preview:
     - board
@@ -296,10 +296,11 @@ pcbs:
         outline: board_mcu
         layer: Dwgs.User
     footprints:
-      choc_hotswap_matrix:
+      choc_switches:
         what: infused-kim/choc
         where:
-        - /^matrix_.*/
+          - /^matrix_.*/
+          - /^thumbfan_.*/
         params:
           show_keycaps: false
           reverse: true
@@ -307,22 +308,12 @@ pcbs:
           solder: true
           from: "GND"
           to: "k{{kn}}"
-      choc_hotswap_thumbfan:
-        what: infused-kim/choc
-        where:
-        - /^thumbfan_.*/
-        params:
-          show_keycaps: false
-          reverse: true
-          hotswap: false
-          solder: true
-          from: "GND"
-          to: "k{{kn}}"
+
       mcu:
         what: infused-kim/nice_nano_pretty
         where:
           ref:
-          - _helper_mcu_center
+            - _helper_mcu_center
         params:
           P0: k0
           P1: k1
@@ -366,7 +357,7 @@ pcbs:
         what: infused-kim/switch_reset
         where:
           ref:
-          - _helper_pcb_reset
+            - _helper_pcb_reset
         params:
           reverse: true
           from: RST
@@ -375,7 +366,7 @@ pcbs:
         what: via
         where:
           ref:
-          - _helper_pcb_reset
+            - _helper_pcb_reset
           shift: [-0.71, 0]
         params:
           net: "RST"
@@ -384,7 +375,7 @@ pcbs:
         what: infused-kim/switch_power
         where:
           ref:
-          - _helper_pcb_power
+            - _helper_pcb_power
         params:
           reverse: true
           from: BAT+
@@ -393,7 +384,7 @@ pcbs:
         what: infused-kim/text
         where:
           ref:
-          - _helper_pcb_power
+            - _helper_pcb_power
           shift: [0, 5.2]
         params:
           reverse: true
@@ -402,7 +393,7 @@ pcbs:
         what: infused-kim/text
         where:
           ref:
-          - _helper_pcb_power
+            - _helper_pcb_power
           shift: [0, -5.2]
         params:
           reverse: true
@@ -412,7 +403,7 @@ pcbs:
         what: jstph
         where:
           ref:
-          - _helper_pcb_jstph
+            - _helper_pcb_jstph
         params:
           neg: "GND"
           pos: "BAT+"
@@ -420,13 +411,13 @@ pcbs:
         what: infused-kim/icon_bat
         where:
           ref:
-          - _helper_pcb_jstph
+            - _helper_pcb_jstph
           shift: [0, 2]
       icon_bat_r:
         what: infused-kim/icon_bat
         where:
           ref:
-          - _helper_pcb_jstph
+            - _helper_pcb_jstph
           shift: [0, 2]
         params:
           side: "B"
