@@ -69,63 +69,66 @@ points:
             top.kn: 12
             home.kn: 13
             bottom.kn: 14
+            bottom.bind: [0, 0, ky, 0.5 pd]
       rows:
         bottom:
         home:
         top:
 
-    _helper_anchor_a:
-      anchor:
-        - ref: matrix_inner_bottom
-          shift: [0.5 kx, -0.5 ky - 9]
-
     thumbfan:
       anchor:
-        - ref: _helper_anchor_a
-          orient: -30
-          shift: [0.7 kx, -0.5 ky]
+        - ref: matrix_middle_bottom
+          shift: [0.8 kx + 1, -1.7 ky]
       key:
-        spread: -kx
-        splay: 15
-        origin: [0.5 kx, -0.5 ky]
+        spread: kx
+        splay: -15
       columns:
-        far.key:
+        near.key:
           splay: 0
           kn: 15
+          bind: [2 ky, kx, 0, 0]
         home.key:
           kn: 16
           bind: [pd, 0]
-        near.key:
+          origin: [-0.5 kx, -0.5 ky]
+        far.key:
           kn: 17
+          bind: [0, 0, 0, 2 kx]
+          origin: [-0.5 kx, -0.5 ky]
       rows:
         thumb:
-
-    _helper_anchor_b:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [0.5 kx, 0.5 ky + 5]
 
     # helpers to draw mcu area
     _helper_mcu_topleft:
       anchor:
         - ref: matrix_inner_top
           shift: [0.5 kx, 0.5 ky - mcu_shift_y]
-    _helper_mcu_bottomleft:
-      anchor:
-        - ref: _helper_anchor_a
     _helper_mcu_topright:
       anchor:
-        - - ref: _helper_mcu_topleft
-            affect: 'y'
-          - ref: _helper_anchor_b
-            affect: 'x'
-    _helper_mcu_bottomright:
+        - ref: _helper_mcu_topleft
+          shift: [mcu_width + 4, 0]
+    _helper_mcu_bottomleft:
       anchor:
-        - ref: _helper_anchor_b
+        - aggregate:
+            method: intersect
+            parts:
+              - ref: thumbfan_far_thumb
+                shift: [0, 0.5 ky]
+                rotate: 90
+              - ref: matrix_inner_bottom
+                shift: [0.5 kx, 0]
     _helper_mcu_bottommiddle:
       anchor:
         - ref: thumbfan_far_thumb
           shift: [0.5 kx, 0.5 ky]
+    _helper_mcu_bottomright:
+      anchor:
+        - aggregate:
+            method: intersect
+            parts:
+              - ref: thumbfan_far_thumb
+                shift: [0.5 kx, 0]
+              - ref: _helper_mcu_topright
 
     _helper_topright:
       anchor:
@@ -144,31 +147,31 @@ points:
 
     _helper_mcu_cover_holes_left:
       anchor:
-        - ref: _helper_anchor_a
+        - ref: _helper_mcu_bottomleft
           orient: -60
           shift: [0, 3*1.1547]
 
     _helper_mcu_cover_holes_right:
       anchor:
-        - ref: _helper_anchor_b
-          orient: 105
+        - ref: _helper_mcu_bottomright
+          orient: 75
           shift: [0, 3*1.035]
 
     _helper_pcb_power:
       anchor:
         - ref: _helper_topright
-          shift: [-1.75, -mcu_height - 11]
+          shift: [-1.75, -mcu_height - 10]
 
     _helper_pcb_jstph:
       anchor:
-        - ref: _helper_topright
-          shift: [-8.0, -mcu_height - 17]
-          rotate: -150
+        - ref: thumbfan_far_thumb
+          shift: [0, 0.5 ky + 5]
+          rotate: -120
 
     _helper_pcb_reset:
       anchor:
         - ref: thumbfan_near_thumb
-          shift: [-0.5 kx + 1.7, 0.5 ky + 4.5]
+          shift: [-0.5 kx + 1.7, 0.5 ky + 3.5]
           rotate: 180
 
 outlines:
@@ -190,43 +193,15 @@ outlines:
         - -/_helper_.*/
       size: 15
 
-  board_matrix:
+  keywell:
     - what: rectangle
       where:
         - /^matrix_.*/
-      size: [kx, ky]
-      bound: true
-
-  board_thumbfan:
-    - what: rectangle
-      where:
         - /^thumbfan_.*/
       size: [kx, ky]
       bound: true
-    - what: rectangle
-      where:
-        - thumbfan_far_thumb
-      size: [2 kx, ky]
-      adjust:
-        - shift: [-kx, 0]
-    - what: rectangle
-      where:
-        - thumbfan_near_thumb
-      size: [2 kx, 2 ky]
-      adjust:
-        - shift: [0.5 kx, 1 ky]
-    - what: rectangle
-      where:
-        - matrix_inner_bottom
-      size: [kx, 2 ky]
-      adjust:
-        - shift: [0, -0.5 ky]
 
-  keywell:
-    - board_matrix
-    - board_thumbfan
-
-  board_mcu:
+  mcu_area:
     - what: polygon
       points:
         - _helper_mcu_topleft
@@ -236,19 +211,25 @@ outlines:
         - _helper_mcu_topright
 
   _board:
-    - board_matrix
-    - board_thumbfan
-    - board_mcu
+    - keywell
+    - mcu_area
 
   board:
     - name: _board
       fillet: 1.5
 
+  mcu_cover_holes:
+    - what: circle
+      where:
+        - /_helper_mcu_cover_holes_.*/
+      radius: screw_hole_size
+
   _mcu_cover:
-    - board_mcu
+    - mcu_area
   mcu_cover:
     - name: _mcu_cover
       expand: -0.5
+    - -mcu_cover_holes
 
   _preview_keycaps:
     - what: rectangle
@@ -270,22 +251,17 @@ outlines:
         - ref: _helper_mcu_center
       size: [12, 30]
 
-  mcu_cover_holes:
-    - what: circle
-      where:
-        - /_helper_mcu_cover_holes_.*/
-      radius: screw_hole_size
-
   preview:
     - board
     - -_preview_keycaps
-    - ^mcu_cover_holes
     - ^mcu_cover
     - ^_preview_mcu
     - ^_preview_battery
+    - ^switches
 
 pcbs:
   board:
+    template: kicad8
     outlines:
       main:
         outline: board
@@ -293,7 +269,7 @@ pcbs:
         outline: _preview_keycaps
         layer: Dwgs.User
       mcu:
-        outline: board_mcu
+        outline: mcu_area
         layer: Dwgs.User
     footprints:
       choc_switches:
