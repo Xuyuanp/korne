@@ -32,11 +32,12 @@ points:
       columns:
         pinky:
           key:
-            bind: [0.5 pd, 0]
+            bind: [0, 0.5 pd, 0, 0]
           rows:
-            top.kn: 0
+            top.kn: '0'
             home.kn: 1
             bottom.kn: 2
+            bottom.bind: 0
         ring:
           key:
             stagger: 0.65 ky
@@ -45,12 +46,14 @@ points:
             top.kn: 3
             home.kn: 4
             bottom.kn: 5
+            bottom.bind: [0, 0, 0, 0.5 pd]
         middle:
           key.stagger: 0.25 ky
           rows:
             top.kn: 6
             home.kn: 7
             bottom.kn: 8
+            bottom.bind: [0.5 pd, 0]
         index:
           key:
             stagger: -0.35 ky
@@ -71,33 +74,26 @@ points:
         bottom:
         home:
         top:
+
     thumbfan:
       anchor:
-        - ref: matrix_inner_bottom
-          shift: [0.5 kx, -0.5 ky / 1.732]
-          rotate: -30
-        - shift: [thumb_shift, 0]
-          rotate: 90
-        - shift: [-0.75 kx, 0.5 ky]
+        - ref: matrix_middle_bottom
+          shift: [0.8 kx, -1.8 ky]
       key:
-        spread: -kx
+        spread: kx
+        splay: -15
+        bind: [0, 0]
       columns:
-        far.key:
-          width: 1.5 kx
-          kn: 17
-        _bridge_far_home.key:
-          spread: -0.25 kx - 0.5 (kx - ky)
-          splay: -90
-          skip: true
-        home.key:
-          splay: 15
-          spread: -0.5 (kx + ky)
-          origin: [0.5 kx, -0.5 ky]
-          kn: 16
         near.key:
-          splay: 15
-          origin: [0.5 kx, -0.5 ky]
+          splay: 0
           kn: 15
+        home.key:
+          origin: [-0.5 kx, -0.5 ky]
+          kn: 16
+          bind: [pd, 0]
+        far.key:
+          origin: [-0.5 kx, -0.5 ky]
+          kn: 17
       rows:
         thumb:
 
@@ -197,18 +193,30 @@ outlines:
       bound: true
 
   board_thumbfan:
-    - what: polygon
-      points:
-      - - ref: matrix_middle_bottom
-          affect: "y"
-        - ref: _helper_thumbfan_bottomleft
-          affect: "x"
-      - ref: _helper_mcu_bottomleft
-      - ref: _helper_mcu_bottomright
-      - ref: _helper_thumbfan_bottom
-      - ref: _helper_thumbfan_bottom
-        shift: [0, ky]
-      - ref: _helper_thumbfan_bottomleft
+    - what: rectangle
+      where:
+      - /^thumbfan_.*/
+      size: [kx, ky]
+      bound: true
+    - what: rectangle
+      where:
+      - thumbfan_far_thumb
+      size: [2 kx, ky]
+      adjust:
+        - shift: [-kx, 0]
+    - what: rectangle
+      where:
+      - thumbfan_near_thumb
+      size: [2 kx, 2 ky]
+      adjust:
+        - shift: [0.5 kx, 1 ky]
+    - what: rectangle
+      where:
+      - matrix_inner_bottom
+      size: [kx, 2 ky]
+      adjust:
+        - shift: [0, -0.5 ky]
+
   board_mcu:
     - what: polygon
       points:
@@ -216,11 +224,13 @@ outlines:
       - _helper_mcu_bottomright
       - _helper_mcu_topright
       - _helper_mcu_topleft
+
   mcu_cover_holes:
   - what: circle
     where:
     - /_helper_mcu_cover_holes_.*/
     radius: screw_hole_size
+
   keywell_holes:
     - switches
   keywell:
@@ -234,14 +244,6 @@ outlines:
     - name: board_mcu
       expand: -0.5
     - -mcu_cover_holes
-
-  _case_sw_notch:
-    - what: rectangle
-      where:
-        - ref: _helper_mcu_bottomright
-          rotate: 30
-        - shift: [0, 16.3]
-      size: [4, 18]
 
   _preview_mcu:
     - what: rectangle
@@ -275,7 +277,6 @@ outlines:
     - ^mcu_cover
     - ^_preview_mcu
     - ^_preview_battery
-    - ^_case_sw_notch
 
 pcbs:
   board:
@@ -287,9 +288,6 @@ pcbs:
         layer: Dwgs.User
       mcu:
         outline: board_mcu
-        layer: Dwgs.User
-      notch:
-        outline: _case_sw_notch
         layer: Dwgs.User
     footprints:
       choc_hotswap_matrix:
@@ -368,14 +366,6 @@ pcbs:
           reverse: true
           from: RST
           to: GND
-      reset_via_gnd:
-        what: via
-        where:
-          ref:
-          - _helper_topright
-          shift: [-0.975, -mcu_height - 5.5]
-        params:
-          net: "GND"
       reset_via_rst:
         what: via
         where:
@@ -447,26 +437,6 @@ pcbs:
           - /_helper_mcu_cover_holes_.*/
         params:
           outline: 0.5
-
-      info_l:
-        what: text
-        where:
-          ref:
-          - matrix_pinky_bottom
-          shift: [0.6 kx, -2]
-        params:
-          text: "korne v0.3.1\\nby Xuyuan Pang"
-          justify: left
-      info_r:
-        what: text
-        where:
-          ref:
-            - matrix_pinky_bottom
-          shift: [0.6 kx, -2]
-        params:
-          layer: B.SilkS
-          text: "korne v0.3.1\\nby Xuyuan Pang"
-          justify: right mirror
 
       jlc_marker:
         what: text
