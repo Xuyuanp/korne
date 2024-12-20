@@ -11,10 +11,9 @@ units:
   px: kx + pd
   py: ky + pd
 
-  thumb_shift: 1.6 ky
-
   mcu_width: 17.78
   mcu_height: 33
+  mcu_shift_y: 12
 
   m2r: 1.05 # radius of m2 screw
   screw_hole_size: m2r # screw hole size
@@ -75,96 +74,102 @@ points:
         home:
         top:
 
+    _helper_anchor_a:
+      anchor:
+        - ref: matrix_inner_bottom
+          shift: [0.5 kx, -0.5 ky - 9]
+
     thumbfan:
       anchor:
-        - ref: matrix_middle_bottom
-          shift: [0.8 kx, -1.8 ky]
+        - ref: _helper_anchor_a
+          orient: -30
+          shift: [0.7 kx, -0.5 ky]
       key:
-        spread: kx
-        splay: -15
-        bind: [0, 0]
+        spread: -kx
+        splay: 15
+        origin: [0.5 kx, -0.5 ky]
       columns:
-        near.key:
+        far.key:
           splay: 0
           kn: 15
         home.key:
-          origin: [-0.5 kx, -0.5 ky]
           kn: 16
           bind: [pd, 0]
-        far.key:
-          origin: [-0.5 kx, -0.5 ky]
+        near.key:
           kn: 17
       rows:
         thumb:
 
-    _helper_topright:
+    _helper_anchor_b:
       anchor:
-        - ref: matrix_inner_top
-          shift: [0, 0.5 ky]
-          affect: "y"
-        - ref: thumbfan_far_thumb
-          shift: [0.75 kx, -0.5 ky]
-          affect: "x"
+      - ref: thumbfan_far_thumb
+        shift: [0.5 kx, 0.5 ky + 5]
 
     # helpers to draw mcu area
     _helper_mcu_topleft:
       anchor:
         - ref: matrix_inner_top
-          shift: [0.5 kx, 0.5 ky]
-    _helper_mcu_bottomright:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [0.75 kx, -0.5 ky]
-          rotate: -90
+          shift: [0.5 kx, 0.5 ky - mcu_shift_y]
     _helper_mcu_bottomleft:
       anchor:
-        - ref: _helper_mcu_bottomright
-          shift: [-thumb_shift, 0]
+        - ref: _helper_anchor_a
     _helper_mcu_topright:
       anchor:
-        - ref: _helper_mcu_topleft
-          affect: "y"
-        - ref: _helper_mcu_bottomright
-          affect: "x"
+        - - ref: _helper_mcu_topleft
+            affect: 'y'
+          - ref: _helper_anchor_b
+            affect: 'x'
+    _helper_mcu_bottomright:
+      anchor:
+        - ref: _helper_anchor_b
+    _helper_mcu_bottommiddle:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [0.5 kx, 0.5 ky]
+
+    _helper_topright:
+      anchor:
+        - ref: _helper_mcu_topright
+
     _helper_mcu_topmiddle:
       anchor:
         - aggregate.parts:
           - ref: _helper_mcu_topleft
           - ref: _helper_mcu_topright
 
-    _helper_mcu_cover_holes_low:
-      anchor:
-        - ref: _helper_mcu_bottomright
-          rotate: 60
-        - shift: [0, 3 * 2]
-    _helper_mcu_cover_holes_high:
-      anchor:
-        - ref: _helper_mcu_bottomleft
-          rotate: -30
-        - shift: [0, 1.73205081 * 2]
-
-    _helper_thumbfan_bottom:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [-0.75 kx, -0.5 ky]
-    _helper_thumbfan_bottomleft:
-      anchor:
-        - ref: thumbfan_near_thumb
-          shift: [-0.5 kx, -0.5 ky]
-
-    _helper_matrix_topleft:
-      anchor:
-        - ref: matrix_pinky_top
-          shift: [-0.5 px, 0.5 ky]
-    _helper_matrix_bottomleft:
-      anchor:
-        - ref: matrix_pinky_bottom
-          shift: [-0.5 px, -0.5 ky]
-
     _helper_mcu_center:
       anchor:
         - ref: _helper_mcu_topmiddle
-          shift: [0, -0.5 mcu_height]
+          shift: [0, -0.5 mcu_height - 3]
+
+    _helper_mcu_cover_holes_left:
+      anchor:
+        - ref: _helper_anchor_a
+          orient: -60
+          shift: [0, 3*1.1547]
+
+    _helper_mcu_cover_holes_right:
+      anchor:
+        - ref: _helper_anchor_b
+          orient: 105
+          shift: [0, 3*1.035]
+
+    _helper_pcb_power:
+      anchor:
+        - ref: _helper_topright
+          shift: [-1.75, -mcu_height - 11]
+
+    _helper_pcb_jstph:
+      anchor:
+        - ref: _helper_topright
+          shift: [-8.0, -mcu_height - 17]
+          rotate: -150
+
+    _helper_pcb_reset:
+      anchor:
+        - ref: thumbfan_near_thumb
+          shift: [-0.5 kx + 1.7, 0.5 ky + 4.5]
+          rotate: 180
 
 outlines:
   raw:
@@ -217,52 +222,47 @@ outlines:
       adjust:
         - shift: [0, -0.5 ky]
 
-  board_mcu:
-    - what: polygon
-      points:
-      - _helper_mcu_bottomleft
-      - _helper_mcu_bottomright
-      - _helper_mcu_topright
-      - _helper_mcu_topleft
-
-  mcu_cover_holes:
-  - what: circle
-    where:
-    - /_helper_mcu_cover_holes_.*/
-    radius: screw_hole_size
-
-  keywell_holes:
-    - switches
   keywell:
     - board_matrix
     - board_thumbfan
-  board:
-    - keywell
-    - name: board_mcu
-      fillet: 1.5
-  mcu_cover:
-    - name: board_mcu
-      expand: -0.5
-    - -mcu_cover_holes
 
-  _preview_mcu:
-    - what: rectangle
-      where:
-      - ref: _helper_mcu_center
-      size: [mcu_width, mcu_height]
+  board_mcu:
+    - what: polygon
+      points:
+      - _helper_mcu_topleft
+      - _helper_mcu_bottomleft
+      - _helper_mcu_bottommiddle
+      - _helper_mcu_bottomright
+      - _helper_mcu_topright
+
+  _board:
+    - board_matrix
+    - board_thumbfan
+    - board_mcu
+
+  board:
+    - name: _board
+      fillet: 1.5
+
+  _mcu_cover:
+    - board_mcu
+  mcu_cover:
+    - name: _mcu_cover
+      expand: -0.5
+
   _preview_keycaps:
     - what: rectangle
       where:
-      - - -/_helper_.*/
-        - -/thumbfan_far_thumb/
+      - /^matrix_.*/
+      - /^thumbfan_.*/
       size: [kx - 0.5, ky - 0.5]
       bound: false
       corner: 1.5
+
+  _preview_mcu:
     - what: rectangle
-      where:
-      - thumbfan_far_thumb
-      size: [1.5 kx - 0.5, ky - 0.5]
-      corner: 1.5
+      where: _helper_mcu_center
+      size: [mcu_width, mcu_height]
 
   _preview_battery:
     - what: rectangle
@@ -270,10 +270,16 @@ outlines:
       - ref: _helper_mcu_center
       size: [12, 30]
 
+  mcu_cover_holes:
+  - what: circle
+    where:
+    - /_helper_mcu_cover_holes_.*/
+    radius: screw_hole_size
+
   preview:
     - board
     - -_preview_keycaps
-    - -mcu_cover_holes
+    - ^mcu_cover_holes
     - ^mcu_cover
     - ^_preview_mcu
     - ^_preview_battery
@@ -360,8 +366,7 @@ pcbs:
         what: infused-kim/switch_reset
         where:
           ref:
-          - _helper_topright
-          shift: [-1.7, -mcu_height - 5.5]
+          - _helper_pcb_reset
         params:
           reverse: true
           from: RST
@@ -370,8 +375,8 @@ pcbs:
         what: via
         where:
           ref:
-          - _helper_topright
-          shift: [-2.425, -mcu_height - 5.5]
+          - _helper_pcb_reset
+          shift: [-0.71, 0]
         params:
           net: "RST"
 
@@ -379,8 +384,7 @@ pcbs:
         what: infused-kim/switch_power
         where:
           ref:
-          - _helper_topright
-          shift: [-1.75, -mcu_height - 15]
+          - _helper_pcb_power
         params:
           reverse: true
           from: BAT+
@@ -389,8 +393,8 @@ pcbs:
         what: infused-kim/text
         where:
           ref:
-          - _helper_topright
-          shift: [-1.75, -mcu_height - 9.8]
+          - _helper_pcb_power
+          shift: [0, 5.2]
         params:
           reverse: true
           text: "ON"
@@ -398,8 +402,8 @@ pcbs:
         what: infused-kim/text
         where:
           ref:
-          - _helper_topright
-          shift: [-1.75, -mcu_height - 20.2]
+          - _helper_pcb_power
+          shift: [0, -5.2]
         params:
           reverse: true
           text: "OFF"
@@ -408,9 +412,7 @@ pcbs:
         what: jstph
         where:
           ref:
-          - _helper_topright
-          shift: [-7.0, -mcu_height - 15]
-          rotate: -90
+          - _helper_pcb_jstph
         params:
           neg: "GND"
           pos: "BAT+"
@@ -418,16 +420,14 @@ pcbs:
         what: infused-kim/icon_bat
         where:
           ref:
-          - _helper_topright
-          shift: [-15, -mcu_height - 15]
-          rotate: -90
+          - _helper_pcb_jstph
+          shift: [0, 2]
       icon_bat_r:
         what: infused-kim/icon_bat
         where:
           ref:
-          - _helper_topright
-          shift: [-15, -mcu_height - 15]
-          rotate: 90
+          - _helper_pcb_jstph
+          shift: [0, 2]
         params:
           side: "B"
 
