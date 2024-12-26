@@ -296,6 +296,13 @@ pcbs:
           from: "k{{kn}}"
           to: "GND"
 
+          keycap_3dmodel_filename: ${EG_INFUSED_KIM_3D_MODELS}/Choc_V1_Keycap_MBK_Black_1u.step
+          keycap_3dmodel_xyz_offset: [0, 0, -8]
+          keycap_3dmodel_xyz_rotation: [0, 180, 0]
+          switch_3dmodel_filename: ${EG_INFUSED_KIM_3D_MODELS}/Choc_V1_Switch.step
+          switch_3dmodel_xyz_offset: [0, 0, -1.5]
+          switch_3dmodel_xyz_rotation: [0, 180, 180]
+
       mcu:
         what: ceoloide/mcu_nice_nano
         where:
@@ -304,6 +311,10 @@ pcbs:
         params:
           reversible: true
           reverse_mount: true
+          mcu_3dmodel_filename: ${EG_INFUSED_KIM_3D_MODELS}/Nice_Nano_V2.step
+          # Z up 1mm for MCU thickness and an additional 1.14 for https://www.advanced.com/products/peel-a-way-removable-carriers/peel-a-way-strips/2-54mm-pitch
+          mcu_3dmodel_xyz_offset: [0, 0, 5.14]
+          mcu_3dmodel_xyz_rotation: [0, 180, 0]
 
           # top row
           P1: k12
@@ -345,8 +356,13 @@ pcbs:
             - _helper_pcb_reset
         params:
           reversible: true
+          side: 'B'
           from: GND
           to: RST
+
+          reset_switch_3dmodel_filename: ${EG_INFUSED_KIM_3D_MODELS}/Switch_Reset.step
+          reset_switch_3dmodel_xyz_offset: [0, 0, 0]
+          reset_switch_3dmodel_xyz_rotation: [-90, 0, 180]
       reset_via_rst:
         what: via
         where:
@@ -365,6 +381,8 @@ pcbs:
           reversible: true
           from: RAW
           to: BAT+
+          switch_3dmodel_filename: ${EG_INFUSED_KIM_3D_MODELS}/Switch_Power.step
+          switch_3dmodel_xyz_rotation: [-90, 0, -90]
 
       jstph:
         what: ceoloide/battery_connector_jst_ph_2
@@ -375,6 +393,10 @@ pcbs:
           reversible: true
           BAT_N: "GND"
           BAT_P: "BAT+"
+
+          battery_connector_3dmodel_filename: ${KORNE_3D_MODELS}/JST-S2B-PH-K-S.STEP
+          battery_connector_3dmodel_xyz_offset: [1, 0, 0]
+          battery_connector_3dmodel_xyz_rotation: [180, 0, 180]
 
       mcu_cover_holes:
         what: ceoloide/mounting_hole_plated
