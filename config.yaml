@@ -25,6 +25,8 @@ points:
     bind: 0
   zones:
     matrix:
+      anchor:
+        shift: [100, -100]
       key:
         padding: ky
         spread: u
@@ -106,7 +108,7 @@ points:
     _helper_mcu_topright:
       anchor:
         - ref: _helper_mcu_topleft
-          shift: [mcu_width + 3, 0]
+          shift: [mcu_width + 1.5, 0]
     _helper_mcu_bottomleft:
       anchor:
         - aggregate:
@@ -142,32 +144,44 @@ points:
 
     _helper_mcu_cover_holes_left:
       anchor:
-        - ref: _helper_mcu_bottomleft
-          orient: -60
-          shift: [0, 3*1.1547]
+        - aggregate:
+            method: intersect
+            parts:
+              - ref: thumbfan_far_thumb
+                shift: [0, 0.5 ky + 3]
+                rotate: 90
+              - ref: _helper_mcu_topleft
+                shift: [3, 0]
 
     _helper_mcu_cover_holes_right:
       anchor:
-        - ref: _helper_mcu_bottomright
-          orient: 75
-          shift: [0, 3*1.035]
+        # - ref: _helper_mcu_bottomright
+        #   orient: 75
+        #   shift: [0, 3*1.035]
+        - aggregate:
+            method: intersect
+            parts:
+              - ref: thumbfan_far_thumb
+                shift: [0, 0.5 ky + 3]
+                rotate: 90
+              - ref: _helper_mcu_topright
+                shift: [-3, 0]
 
     _helper_pcb_power:
       anchor:
         - ref: _helper_mcu_topright
-          shift: [-1.75, -mcu_height - 10]
-
-    _helper_pcb_jstph:
-      anchor:
-        - ref: thumbfan_far_thumb
-          shift: [-1, 0.5 ky + 5]
-          rotate: -120
+          shift: [-2.075, -mcu_height - 10]
 
     _helper_pcb_reset:
       anchor:
         - ref: _helper_mcu_topmiddle
-          shift: [0, -1.7]
-          rotate: 90
+          shift: [0, -1.86]
+
+    _helper_pcb_jstph:
+      anchor:
+        - ref: thumbfan_far_thumb
+          shift: [-2, 0.5 ky + 4]
+          rotate: -120
 
 outlines:
   raw:
@@ -268,24 +282,29 @@ pcbs:
         layer: Dwgs.User
     footprints:
       choc_switches:
-        what: infused-kim/choc
+        what: ceoloide/switch_choc_v1_v2
         where:
           - /^matrix_.*/
           - /^thumbfan_.*/
         params:
-          show_keycaps: false
-          reverse: true
+          include_keycap: false
+          reversible: true
           hotswap: false
+          include_corner_marks: true
           solder: true
-          from: "GND"
-          to: "k{{kn}}"
+          choc_v2_support: false
+          from: "k{{kn}}"
+          to: "GND"
 
       mcu:
-        what: infused-kim/nice_nano_pretty
+        what: ceoloide/mcu_nice_nano
         where:
           ref:
             - _helper_mcu_center
         params:
+          reversible: true
+          reverse_mount: true
+
           # top row
           P1: k12
           P0: k9
@@ -312,96 +331,53 @@ pcbs:
           P16: k16
           P10: k17
 
-          # P0_label: k0
-          # P1_label: k1
-          # P2_label: k2
-          # P3_label: k3
-          # P4_label: k4
-          # P5_label: k5
-          # P6_label: k6
-          # P7_label: k7
-          # P8_label: k8
-          # P9_label: k9
-          # P10_label: k10
-          # P14_label: k11
-          # P15_label: k12
-          # P16_label: k13
-          # P18_label: k14
-          # P19_label: k15
-          # P20_label: k16
-          # P21_label: k17
+      filled_ground:
+        what: ceoloide/utility_filled_zone
+        params:
+          side: 'F&B'
+          fill_type: hatch
+          hatch_orientation: 45
 
       reset:
-        what: infused-kim/switch_reset
+        what: ceoloide/reset_switch_smd_side
         where:
           ref:
             - _helper_pcb_reset
         params:
-          reverse: true
-          from: RST
-          to: GND
+          reversible: true
+          from: GND
+          to: RST
       reset_via_rst:
         what: via
         where:
           ref:
             - _helper_pcb_reset
-          shift: [-0.71, 0]
+          shift: [0, -0.85]
         params:
           net: "RST"
 
       power:
-        what: infused-kim/switch_power
+        what: ceoloide/power_switch_smd_side
         where:
           ref:
             - _helper_pcb_power
         params:
-          reverse: true
-          from: BAT+
-          to: RAW
-      power_on_r:
-        what: infused-kim/text
-        where:
-          ref:
-            - _helper_pcb_power
-          shift: [0, 5.2]
-        params:
-          reverse: true
-          text: "ON"
-      power_off_r:
-        what: infused-kim/text
-        where:
-          ref:
-            - _helper_pcb_power
-          shift: [0, -5.2]
-        params:
-          reverse: true
-          text: "OFF"
+          reversible: true
+          from: RAW
+          to: BAT+
 
       jstph:
-        what: jstph
+        what: ceoloide/battery_connector_jst_ph_2
         where:
           ref:
             - _helper_pcb_jstph
         params:
-          neg: "GND"
-          pos: "BAT+"
-      icon_bat_l:
-        what: infused-kim/icon_bat
-        where:
-          ref:
-            - _helper_pcb_jstph
-          shift: [0, 2]
-      icon_bat_r:
-        what: infused-kim/icon_bat
-        where:
-          ref:
-            - _helper_pcb_jstph
-          shift: [0, 2]
-        params:
-          side: "B"
+          reversible: true
+          BAT_N: "GND"
+          BAT_P: "BAT+"
 
       mcu_cover_holes:
-        what: infused-kim/mounting_hole
+        what: ceoloide/mounting_hole_plated
         where:
           - /_helper_mcu_cover_holes_.*/
         params:
