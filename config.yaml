@@ -181,7 +181,7 @@ points:
       anchor:
         - ref: thumbfan_far_thumb
           shift: [-2, 0.5 ky + 4]
-          rotate: -120
+          rotate: -125
 
 outlines:
   raw:
@@ -276,6 +276,9 @@ pcbs:
         outline: board
       keycaps:
         outline: _preview_keycaps
+        layer: Dwgs.User
+      mcu_cover:
+        outline: mcu_cover
         layer: Dwgs.User
       mcu:
         outline: mcu_area
@@ -379,8 +382,6 @@ pcbs:
             - _helper_pcb_power
         params:
           reversible: true
-          from: RAW
-          to: BAT+
           switch_3dmodel_filename: ${EG_INFUSED_KIM_3D_MODELS}/Switch_Power.step
           switch_3dmodel_xyz_rotation: [-90, 0, -90]
 
@@ -390,9 +391,7 @@ pcbs:
           ref:
             - _helper_pcb_jstph
         params:
-          reversible: true
-          BAT_N: "GND"
-          BAT_P: "BAT+"
+          reversible: false
 
           battery_connector_3dmodel_filename: ${KORNE_3D_MODELS}/JST-S2B-PH-K-S.STEP
           battery_connector_3dmodel_xyz_offset: [1, 0, 0]
